@@ -301,66 +301,51 @@
         AOS.init({ duration: 800, once: true });
         feather.replace();
 
-        const payForm = document.getElementById('payForm');
-
-        payForm.addEventListener('submit', async function (e) {
-            e.preventDefault();
-
-            const phone = document.getElementById('phone').value;
-            const amount = 1550; // Amount in KES
-
+        async function fetchPaymentStatus(paymentId) {
             try {
-                // 1️⃣ Initiate STK Push
-                const response = await fetch('https://hashtap-backendon.onrender.com/pay', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ phone, amount })
+                const response = await fetch(`https://hashtap-backendon.onrender.com/payment-status/${paymentId}`, {
+                    method: "GET",
+                    headers: {
+                        "Accept": "application/json"
+                    }
                 });
 
-                const data = await response.json();
-
-                if (!data.CheckoutRequestID) {
-                    alert('Payment initiation failed: ' + JSON.stringify(data));
-                    return;
+                // Check if HTTP response is OK
+                if (!response.ok) {
+                    const text = await response.text(); // Get raw response
+                    console.error("Server returned error:", text);
+                    return { error: `Server error: ${response.status}` };
                 }
 
-                alert('STK Push initiated! Check your phone to complete payment.');
+                // Check if response is actually JSON
+                const contentType = response.headers.get("content-type");
+                if (contentType && contentType.includes("application/json")) {
+                    const data = await response.json();
+                    return data; // Expected JSON
+                } else {
+                    const text = await response.text();
+                    console.error("Expected JSON but got:", text);
+                    return { error: "Unexpected response format from server" };
+                }
 
-                const checkoutID = data.CheckoutRequestID;
-
-                // 2️⃣ Poll backend to check payment status every 5 seconds
-                const pollInterval = 5000;
-                let attempts = 0;
-                const maxAttempts = 12; // stop after 1 minute
-
-                const pollPaymentStatus = setInterval(async () => {
-                    attempts++;
-                    try {
-                        const statusRes = await fetch(`https://hashtap-backendon.onrender.com/payment-status/${checkoutID}`);
-                        const statusData = await statusRes.json();
-
-                        if (statusData.ResultCode === 0) {
-                            // Payment successful
-                            clearInterval(pollPaymentStatus);
-                            alert('✅ Payment successful! You will notice tasks sent to the email you provided within 3 days.');
-                        } else if (statusData.ResultCode !== undefined) {
-                            // Payment failed
-                            clearInterval(pollPaymentStatus);
-                            alert('❌ Payment failed or cancelled.');
-                        } else if (attempts >= maxAttempts) {
-                            clearInterval(pollPaymentStatus);
-                            alert('⚠️ Payment not confirmed yet. Please check your phone.');
-                        }
-                    } catch (err) {
-                        console.error('Error checking payment status:', err);
-                    }
-                }, pollInterval);
-
-            } catch (error) {
-                console.error(error);
-                alert('Error connecting to payment backend. Try again later.');
+            } catch (err) {
+                console.error("Network or fetch error:", err);
+                return { error: "Network error, could not reach server" };
             }
-        });
+        }
+
+        // Example usage:
+        async function checkStatus() {
+            const paymentId = "STK12345"; // replace with your actual ID
+            const result = await fetchPaymentStatus(paymentId);
+
+            if (result.error) {
+                alert("Payment check failed: " + result.error);
+            } else {
+                console.log("Payment status:", result);
+                alert("Payment status: " + JSON.stringify(result));
+            }
+        }
     </script>
 
 
