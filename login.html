@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login | Online Tasks & Surveys</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body class="bg-light">
+    <div class="container d-flex align-items-center justify-content-center min-vh-100">
+        <div class="card shadow-lg border-0 rounded-4" style="max-width: 450px; width: 100%;">
+            <div class="card-body p-4 p-md-5">
+                <h3 class="text-center text-success fw-bold mb-4">LOGIN</h3>
+
+                <form id="loginForm" autocomplete="off">
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Email Address</label>
+                        <input type="email" name="email" class="form-control form-control-lg"
+                            placeholder="Enter your email" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Password</label>
+                        <div class="input-group">
+                            <input type="password" name="password" id="password" class="form-control form-control-lg"
+                                placeholder="Enter your password" required autocomplete="current-password">
+                            <button class="btn btn-outline-secondary" type="button" id="togglePassword">Show</button>
+                        </div>
+                    </div>
+
+                    <div class="form-check mb-3">
+                        <input class="form-check-input" type="checkbox" id="rememberMe">
+                        <label class="form-check-label" for="rememberMe">Remember me</label>
+                    </div>
+
+                    <button type="submit" class="btn btn-success btn-lg w-100">Login</button>
+
+                    <div class="text-center mt-3">
+                        <a href="reset_password.html" class="text-success text-decoration-none fw-semibold">Forgot
+                            password?</a>
+                        <p class="text-muted mt-3 mb-0">Don’t have an account?
+                            <a href="register.html" class="text-success fw-semibold text-decoration-none">Register</a>
+                        </p>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Custom Alert Modal -->
+    <div class="modal fade" id="customAlert" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-success">
+                <div class="modal-header bg-success text-white">
+                    <h5 class="modal-title fw-bold">Online Tasks & Surveys</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body" id="alertMessage"></div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success" data-bs-dismiss="modal">OK</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        // Custom Alert
+        function showCustomAlert(message, redirect = false) {
+            document.getElementById("alertMessage").textContent = message;
+            const modal = new bootstrap.Modal(document.getElementById('customAlert'));
+            modal.show();
+
+            if (redirect) {
+                setTimeout(() => {
+                    window.location.href = "dashboard.html";
+                }, 2000);
+            }
+        }
+
+        // Password visibility toggle
+        document.getElementById("togglePassword").addEventListener("click", function () {
+            const pwd = document.getElementById("password");
+            const type = pwd.type === "password" ? "text" : "password";
+            pwd.type = type;
+            this.textContent = type === "password" ? "Show" : "Hide";
+        });
+
+        // Login logic
+        document.getElementById("loginForm").addEventListener("submit", function (e) {
+            e.preventDefault();
+
+            const email = this.email.value.trim();
+            const password = this.password.value.trim();
+            const rememberMe = document.getElementById("rememberMe").checked;
+
+            // Retrieve registered users (from register.html)
+            const users = JSON.parse(localStorage.getItem("registeredUsers")) || [];
+
+            // Find a match
+            const validUser = users.find(user => user.email === email && user.password === password);
+
+            const submitBtn = this.querySelector('button[type="submit"]');
+            submitBtn.disabled = true;
+            submitBtn.textContent = "Logging in...";
+
+            if (validUser) {
+                // Optionally store logged-in user session
+                localStorage.setItem("currentUser", JSON.stringify(validUser));
+
+                if (rememberMe) {
+                    localStorage.setItem("rememberUser", email);
+                } else {
+                    localStorage.removeItem("rememberUser");
+                }
+
+                showCustomAlert("Login successful! Redirecting...", true);
+            } else {
+                showCustomAlert("Invalid email or password. Please try again.");
+                submitBtn.disabled = false;
+                submitBtn.textContent = "Login";
+            }
+        });
+
+        // Auto-fill remembered email
+        window.addEventListener("load", () => {
+            const remembered = localStorage.getItem("rememberUser");
+            if (remembered) {
+                document.querySelector('input[name="email"]').value = remembered;
+                document.getElementById("rememberMe").checked = true;
+            }
+        });
+    </script>
+</body>
+
+</html>

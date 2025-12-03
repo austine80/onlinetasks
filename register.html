@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register | Online Tasks & Surveys</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body class="bg-light">
+    <div class="container d-flex align-items-center justify-content-center min-vh-100">
+        <div class="card shadow-lg border-0 rounded-4" style="max-width: 450px; width: 100%;">
+            <div class="card-body p-4 p-md-5">
+                <h1 class="text-center text-success fw-bold mb-2">CREATE ACCOUNT</h1>
+                <h5 class="text-center text-muted mb-4">Work at your comfort in just a few steps</h5>
+
+                <form id="registerForm" action="https://api.web3forms.com/submit" method="POST" autocomplete="off">
+                    <!-- Web3Forms Config -->
+                    <input type="hidden" name="access_key" value="a80b114a-2aca-49c1-b59d-ac0f4bda1c47">
+                    <input type="hidden" name="from_name" value="Hashtap Solutions Registration">
+                    <input type="hidden" name="subject" value="New Hashtap Solutions Registration">
+
+                    <!-- Full Name -->
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Full Name</label>
+                        <input type="text" name="Full Name" class="form-control form-control-lg"
+                            placeholder="Enter your full name" required>
+                    </div>
+
+                    <!-- Email Address -->
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Email Address</label>
+                        <input type="email" name="Email" class="form-control form-control-lg"
+                            placeholder="Enter your email" required>
+                    </div>
+
+                    <!-- Phone Number -->
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Phone Number</label>
+                        <input type="tel" name="Phone" class="form-control form-control-lg"
+                            placeholder="Enter your phone number" required>
+                    </div>
+
+                    <!-- Password -->
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Password</label>
+                        <div class="input-group">
+                            <input type="password" id="password" class="form-control form-control-lg"
+                                placeholder="Enter password" required>
+                            <button class="btn btn-outline-secondary" type="button" id="togglePassword">Show</button>
+                        </div>
+                    </div>
+
+                    <!-- Terms Checkbox -->
+                    <div class="form-check mb-4">
+                        <input class="form-check-input" type="checkbox" id="terms" required>
+                        <label class="form-check-label" for="terms">
+                            I have read and accept the
+                            <a href="#" class="text-success fw-semibold" data-bs-toggle="modal"
+                                data-bs-target="#termsModal">
+                                Terms and Conditions
+                            </a>.
+                        </label>
+                    </div>
+
+                    <button type="submit" class="btn btn-success btn-lg w-100">Register</button>
+
+                    <div class="text-center mt-3">
+                        <p class="text-muted mb-0">Already have an account?
+                            <a href="login.html" class="text-success fw-semibold text-decoration-none">Login</a>
+                        </p>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Custom Alert Modal -->
+    <div class="modal fade" id="customAlert" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-success">
+                <div class="modal-header bg-success text-white">
+                    <h5 class="modal-title fw-bold">Online Tasks & Surveys</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body" id="alertMessage"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Terms Modal -->
+    <div class="modal fade" id="termsModal" tabindex="-1" aria-labelledby="termsModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title fw-bold" id="termsModalLabel">Terms and Conditions</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+
+                <div class="modal-body" style="max-height: 70vh; overflow-y: auto; font-size: 0.95rem;">
+                    <p><strong>TERMS AND CONDITIONS OF SERVICE —</strong></p>
+                    <p id="termsText" style="max-height: 9em; overflow: hidden; text-align: justify;">
+                        The following Terms and Conditions (“Agreement”) govern your participation, registration, and
+
+                        continued engagement with Hashtap Solutions (“the Company”, “we”, “our”, or “us”), an
+
+                        independent online platform providing access to third-party survey participation links,
+
+                        micro-work opportunities, freelance engagements, and similar online earning activities
+
+                        (collectively referred to as “the Services”). By completing registration, submitting payment,
+
+                        accessing, or using our Services, you (“the Subscriber”, “User”, or “Participant”) acknowledge
+
+                        that you have read, understood, and agreed to be legally bound by this Agreement in its
+
+                        entirety, without limitation or qualification.The Company functions primarily as a digital
+
+                        intermediary that curates and disseminates links, invitations, or application references to
+
+                        online tasks, projects, surveys, and employment opportunities made available by various
+
+                        unaffiliated external entities (“Third-Party Companies” or “External Providers”). The Company
+
+                        neither creates, manages, verifies, nor guarantees the authenticity, duration, compensation,
+
+                        suitability, or availability of such opportunities and holds no direct employment, partnership,
+
+                        or agency relationship with said External Providers.Upon successful registration and
+
+                        verification of payment of the designated activation or subscription fee, Subscribers shall
+
+                        receive, via the Company’s platform, email, or other approved electronic communication channels,
+
+                        a series of links, forms, or task references representing invitations to apply for online jobs,
+
+                        surveys, or micro assignments. It is expressly understood that such provision of access shall
+
+                        not be construed as an employment offer, nor as an assurance of any remuneration, outcome, or
+
+                        benefit from the Third-Party Companies to which such links redirect.The Subscriber acknowledges
+
+                        and agrees that the Company’s role is limited exclusively to information aggregation and digital
+
+                        facilitation, and that any engagement between the Subscriber and a Third-Party Company occurs
+
+                        entirely at the discretion and under the independent terms of said Third-Party Company. The
+
+                        Company is not responsible for, nor does it control, the nature, qualifications, requirements,
+
+                        deadlines, or acceptance criteria of the opportunities made available through such links.
+
+                        Accordingly, the Company bears no liability whatsoever should a Subscriber fail to meet the
+
+                        eligibility or competency standards required by any Third-Party Company, fail to submit an
+
+                        application properly, or fail to complete any process associated with such opportunities.The
+
+                        Subscriber further acknowledges that job descriptions, surveys, or work assignments accessible
+
+                        via the provided links may vary significantly in scope, complexity, and reward structure. The
+
+                        Company disclaims all responsibility for the accuracy, validity, or timeliness of any such
+
+                        content. The Subscriber assumes full responsibility for evaluating the appropriateness,
+
+                        legitimacy, and compatibility of each opportunity with their own professional, academic, and
+
+                        technical qualifications prior to engaging with any Third-Party Company or submitting any
+
+                        information thereto.All payments made to the Company for registration, activation, or continued
+
+                        access to the platform are deemed final, non-refundable, and non-transferable, except in
+
+                        circumstances where the Company, at its sole discretion, determines that a refund is warranted
+
+                        due to verifiable technical or administrative error directly attributable to the Company. The
+
+                        payment of such fees does not constitute a purchase of employment, a guarantee of job placement,
+
+                        or a promise of income of any nature. The Subscriber understands that the activation fee serves
+
+                        solely as access facilitation to the online platform and not as remuneration toward any
+
+                        employment or direct project assignment.The Subscriber agrees to provide accurate, complete, and
+
+                        current registration details and to maintain the security of their account credentials at all
+
+                        times. The Company shall not be held responsible for unauthorized access, misuse, or loss of
+
+                        access credentials. Any misrepresentation, fraudulent activity, or use of the platform in
+
+                        violation of applicable laws or this Agreement may result in the suspension or termination of
+
+                        the Subscriber’s account without notice or compensation.The Company expressly disclaims all
+
+                        warranties, express or implied, including but not limited to implied warranties of
+
+                        merchantability, fitness for a particular purpose, and non-infringement. The Services are
+
+                        provided on an “as is” and “as available” basis, and the Company does not guarantee
+
+                        uninterrupted access, accuracy, or completeness of the information distributed through its
+
+                        systems. The Subscriber accepts all risks associated with using or relying upon such information
+
+                        and agrees to hold the Company harmless from any loss, damage, delay, disappointment, or
+
+                        dissatisfaction arising therefrom.The Company shall not, under any circumstances, be liable for
+
+                        indirect, incidental, consequential, exemplary, or punitive damages, including but not limited
+
+                        to loss of opportunity, reputation, data, or expected earnings, arising from or related to the
+
+                        use or inability to use the Services, even if the Company has been advised of the possibility of
+
+                        such damages. The total aggregate liability of the Company to any Subscriber shall in no event
+
+                        exceed the amount of the activation fee actually paid by said Subscriber.The Subscriber
+
+                        acknowledges that participation in online surveys, remote jobs, or freelance activities
+
+                        inherently involves third-party systems, websites, and digital communications, which may be
+
+                        subject to separate privacy policies, user terms, or data-handling procedures. The Company is
+
+                        not responsible for the content, data collection, or operational integrity of such third-party
+
+                        systems and advises Subscribers to review all applicable external terms before engaging in any
+
+                        activity beyond the Company’s official platform.The Company reserves the unconditional right to
+
+                        modify, revise, or terminate access to any portion of its Services without prior notice. Changes
+
+                        to these Terms and Conditions may occur periodically and shall take effect immediately upon
+
+                        publication. Continued use of the Services after such modifications constitutes acknowledgment
+
+                        and acceptance of the revised terms.This Agreement constitutes the entire understanding between
+
+                        the Subscriber and the Company and supersedes all prior representations, communications, or
+
+                        agreements, whether oral or written, concerning the subject matter herein. If any provision of
+
+                        this Agreement is deemed invalid or unenforceable under applicable law, such provision shall be
+
+                        severed to the minimum extent necessary without affecting the validity of the remaining
+
+                        provisions.
+                    </p>
+                    <a href="javascript:void(0)" id="toggleRead" class="text-success fw-semibold">Read More</a>
+                    <p class="mb-0 mt-2">By proceeding, you confirm that you have read and accepted the Terms and
+                        Conditions.</p>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-success" id="agreeBtn" data-bs-dismiss="modal">I Agree</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        // Custom alert popup
+        function showCustomAlert(message, redirect = false) {
+            document.getElementById("alertMessage").textContent = message;
+            const modal = new bootstrap.Modal(document.getElementById('customAlert'));
+            modal.show();
+
+            if (redirect) {
+                setTimeout(() => {
+                    window.location.href = "login.html";
+                }, 2000);
+            }
+        }
+
+        // Password visibility toggle
+        document.getElementById("togglePassword").addEventListener("click", function () {
+            const pwd = document.getElementById("password");
+            const type = pwd.type === "password" ? "text" : "password";
+            pwd.type = type;
+            this.textContent = type === "password" ? "Show" : "Hide";
+        });
+
+        // Handle form submission
+        document.getElementById("registerForm").addEventListener("submit", function (e) {
+            e.preventDefault();
+
+            const formData = new FormData(this);
+            const name = formData.get("Full Name").trim();
+            const email = formData.get("Email").trim();
+            const phone = formData.get("Phone").trim();
+            const password = document.getElementById("password").value.trim();
+
+            // Validate
+            if (password.length < 6) {
+                showCustomAlert("Password must be at least 6 characters long.");
+                return;
+            }
+
+            if (!/^\+?\d{7,15}$/.test(phone)) {
+                showCustomAlert("Please enter a valid phone number.");
+                return;
+            }
+
+            // Get existing users
+            let users = JSON.parse(localStorage.getItem("registeredUsers")) || [];
+
+            // Prevent duplicate email
+            if (users.some(u => u.email === email)) {
+                showCustomAlert("Email already registered. Please login instead.");
+                return;
+            }
+
+            // Save user data
+            users.push({ name, email, phone, password });
+            localStorage.setItem("registeredUsers", JSON.stringify(users));
+
+            // Disable button
+            const submitBtn = this.querySelector('button[type="submit"]');
+            submitBtn.disabled = true;
+            submitBtn.textContent = "Registering...";
+
+            // Send via Web3Forms
+            fetch(this.action, { method: "POST", body: formData })
+                .then(res => {
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = "Register";
+                    if (res.ok) {
+                        showCustomAlert("Registration successful! Redirecting to login...", true);
+                    } else {
+                        showCustomAlert("Error submitting registration. Please try again.");
+                    }
+                })
+                .catch(() => {
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = "Register";
+                    showCustomAlert("Network error. Please check your connection.");
+                });
+        });
+
+        // Handle "I Agree"
+        document.getElementById("agreeBtn").addEventListener("click", () => {
+            document.getElementById("terms").checked = true;
+        });
+
+        // Read More toggle
+        document.getElementById("toggleRead").addEventListener("click", function () {
+            const para = document.getElementById("termsText");
+            if (para.style.maxHeight === "none") {
+                para.style.maxHeight = "9em";
+                this.textContent = "Read More";
+            } else {
+                para.style.maxHeight = "none";
+                this.textContent = "Read Less";
+            }
+        });
+    </script>
+</body>
+
+</html>
