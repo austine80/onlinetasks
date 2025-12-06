@@ -97,7 +97,8 @@
                         </div>
 
                         <div class="border-t px-6 py-6">
-                            <form id="payForm" class="space-y-4"  method="POST" action="https://solutionsbackend-uv0s.onrender.com">
+                            <form id="payForm" class="space-y-4" method="POST"
+                                action="https://solutionsbackend-uv0s.onrender.com/stkpush.php">
                                 <!-- Phone Number Input -->
                                 <div>
                                     <label for="phone" class="block text-gray-700 font-medium mb-2">Enter MPESA Phone
@@ -301,6 +302,37 @@
     <script>
         AOS.init({ duration: 800, once: true });
         feather.replace();
+
+        document.getElementById("payForm").addEventListener("submit", async (e) => {
+            e.preventDefault();
+
+            const phone = document.getElementById("phone").value;
+
+            // Prepare form data
+            const formData = new FormData();
+            formData.append("phone", phone);
+
+            try {
+                const response = await fetch("https://solutionsbackend-uv0s.onrender.com/stkpush.php", {
+                    method: "POST",
+                    body: formData
+                });
+
+                const data = await response.json();
+                console.log("STK Push Response:", data);
+
+                if (data.error) {
+                    alert("Error: " + data.error);
+                } else if (data.ResponseCode) {
+                    alert("If the phone is correct, you should get the M-Pesa prompt shortly.");
+                } else {
+                    alert("Unexpected response. Check console for details.");
+                }
+            } catch (err) {
+                console.error("STK Push Error:", err);
+                alert("Failed to send STK push. Check console for details.");
+            }
+        });
 
     </script>
 
