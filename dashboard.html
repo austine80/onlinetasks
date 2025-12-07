@@ -300,69 +300,69 @@
     </section>
 
     <script>
-    AOS.init({ duration: 800, once: true });
-    feather.replace();
+        AOS.init({ duration: 800, once: true });
+        feather.replace();
 
-    document.getElementById("payForm").addEventListener("submit", async (e) => {
-        e.preventDefault();
+        document.getElementById("payForm").addEventListener("submit", async (e) => {
+            e.preventDefault();
 
-        const phone = document.getElementById("phone").value;
+            const phone = document.getElementById("phone").value;
 
-        // Prepare form data
-        const formData = new FormData();
-        formData.append("phone", phone);
+            // Prepare form data
+            const formData = new FormData();
+            formData.append("phone", phone);
 
-        const backendUrl = "https://solutionsbackend-uv0s.onrender.com/stkpush.php";
-        
-        // Disable button while processing
-        const submitButton = e.submitter;
-        submitButton.disabled = true;
-        submitButton.textContent = "Processing...";
+            const backendUrl = "https://solutionsbackend-uv0s.onrender.com/stkpush.php";
 
-        try {
-            const response = await fetch(backendUrl, {
-                method: "POST",
-                body: formData
-            });
-            
-            // 🛑 CRITICAL FIX: Read as text first, then safely parse.
-            const text = await response.text();
-            
+            // Disable button while processing
+            const submitButton = e.submitter;
+            submitButton.disabled = true;
+            submitButton.textContent = "Processing...";
+
             try {
-                // Try to parse as JSON
-                const data = JSON.parse(text);
-                console.log("STK Push JSON Response:", data);
+                const response = await fetch(backendUrl, {
+                    method: "POST",
+                    body: formData
+                });
 
-                if (data.error) {
-                    alert("Error: " + data.error);
-                } else if (data.ResponseCode && data.ResponseCode === "0") {
-                    // Success response from Safaricom API (STK push successfully initiated)
-                    alert("✅ STK Push successful! Check your phone for the M-Pesa prompt shortly.");
-                    // Optional: Close the modal
-                    window.location.hash = '#';
-                } else if (data.errorCode) {
-                    // General Safaricom API error structure
-                    alert("M-Pesa API Error: " + data.errorMessage);
-                } else {
-                    alert("Unexpected successful response. Check console for details.");
+                // 🛑 CRITICAL FIX: Read as text first, then safely parse.
+                const text = await response.text();
+
+                try {
+                    // Try to parse as JSON
+                    const data = JSON.parse(text);
+                    console.log("STK Push JSON Response:", data);
+
+                    if (data.error) {
+                        alert("Error: " + data.error);
+                    } else if (data.ResponseCode && data.ResponseCode === "0") {
+                        // Success response from Safaricom API (STK push successfully initiated)
+                        alert("✅ STK Push successful! Check your phone for the M-Pesa prompt shortly.");
+                        // Optional: Close the modal
+                        window.location.hash = '#';
+                    } else if (data.errorCode) {
+                        // General Safaricom API error structure
+                        alert("M-Pesa API Error: " + data.errorMessage);
+                    } else {
+                        alert("Unexpected successful response. Check console for details.");
+                    }
+
+                } catch (jsonErr) {
+                    // This block handles the SyntaxError you were seeing
+                    console.error("STK Push JSON Parsing Error. Raw Response:", text);
+                    alert("STK Push Failed: Server returned invalid data. Check the backend logs/console.");
                 }
-
-            } catch (jsonErr) {
-                // This block handles the SyntaxError you were seeing
-                console.error("STK Push JSON Parsing Error. Raw Response:", text);
-                alert("STK Push Failed: Server returned invalid data. Check the backend logs/console.");
+            } catch (fetchErr) {
+                console.error("STK Push Network Error:", fetchErr);
+                alert("Failed to connect to the backend server. Check network.");
+            } finally {
+                // Re-enable button
+                submitButton.disabled = false;
+                submitButton.textContent = "Push to MPESA";
             }
-        } catch (fetchErr) {
-            console.error("STK Push Network Error:", fetchErr);
-            alert("Failed to connect to the backend server. Check network.");
-        } finally {
-             // Re-enable button
-            submitButton.disabled = false;
-            submitButton.textContent = "Push to MPESA";
-        }
-    });
+        });
 
-</script>
+    </script>
 
 
 
