@@ -46,7 +46,7 @@
 
     <!-- 🔒 AUTH GUARD: Redirect if not logged in -->
     <script>
-        if (!localStorage.getItem('isLoggedIn')) {
+        if (!localStorage.getItem('currentUser')) {
             alert('Please log in first to access the dashboard.');
             window.location.replace('login.html');
         }
