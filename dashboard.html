@@ -14,16 +14,14 @@
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 
     <!-- Feather Icons -->
-    <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/feather-icons@4.29.0/dist/feather.min.js"></script>
 
-    <!-- Font Awesome (optional) -->
+    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
         integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
 
-
     <style>
-        /* Smooth hover animation for skill cards */
         .skill-card {
             transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
@@ -33,12 +31,10 @@
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
         }
 
-        /* Show modal when targeted */
         #myModal:target {
             display: flex;
         }
 
-        /* Animate modal appearance */
         #myModal:target #modalContent {
             opacity: 1;
             transform: scale(1);
@@ -47,6 +43,15 @@
 </head>
 
 <body class="bg-gray-50">
+
+    <!-- 🔒 AUTH GUARD: Redirect if not logged in -->
+    <script>
+        if (!localStorage.getItem('isLoggedIn')) {
+            alert('Please log in first to access the dashboard.');
+            window.location.replace('login.html');
+        }
+    </script>
+
     <!-- Skills Section -->
     <section id="skills" class="py-20">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -71,60 +76,10 @@
                         Get paid to share your opinions on products, brands, or services. Companies use your feedback to
                         improve their offerings.
                     </p>
-
-                    <!-- Trigger Button -->
                     <a href="#myModal"
                         class="bg-emerald-600 hover:bg-green-700 text-white font-semibold px-5 py-2 rounded-lg shadow-md transition duration-200 mt-6 inline-block">
                         Open Tasks
                     </a>
-                </div>
-
-                <!-- 🔥 Move modal OUTSIDE of the card -->
-                <div id="myModal" class="fixed inset-0 hidden bg-black bg-opacity-50 z-50 items-center justify-center">
-
-                    <!-- Modal Box -->
-                    <div class="bg-white rounded-lg shadow-lg w-full max-w-md mx-4 relative transform transition-all scale-95 opacity-0 duration-300"
-                        id="modalContent">
-                        <!-- Modal Header -->
-                        <div class="flex justify-between items-center border-b px-6 py-4">
-                            <h2 class="text-lg font-bold text-gray-800">Greatness awaits!</h2>
-                            <a href="#" class="text-gray-400 hover:text-gray-700 text-2xl leading-none">&times;</a>
-                        </div>
-
-                        <!-- Modal Body -->
-                        <div class="px-6 py-4 text-gray-700">
-                            <p>Pay 1550 via M-Pesa STK push to activate your basic account and start earning</p>
-                        </div>
-
-                        <div class="border-t px-6 py-6">
-                            <form id="payForm" class="space-y-4" method="POST"
-                                action="https://solutionsbackend-uv0s.onrender.com/stkpush.php">
-                                <!-- Phone Number Input -->
-                                <div>
-                                    <label for="phone" class="block text-gray-700 font-medium mb-2">Enter MPESA Phone
-                                        Number</label>
-                                    <input type="tel" id="phone" name="phone" placeholder="e.g. 254712345678"
-                                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:outline-none"
-                                        required>
-                                </div>
-
-                                <!-- Action Buttons -->
-                                <div class="flex justify-end space-x-3 pt-2">
-                                    <!-- Cancel Button -->
-                                    <a href="#"
-                                        class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-medium px-4 py-2 rounded-lg transition">
-                                        Cancel
-                                    </a>
-
-                                    <!-- MPESA Prompt Button -->
-                                    <button type="submit"
-                                        class="bg-emerald-600 hover:bg-green-700 text-white font-semibold px-4 py-2 rounded-lg transition">
-                                        Push to MPESA
-                                    </button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
                 </div>
 
                 <!-- Skill Card 2 -->
@@ -137,7 +92,6 @@
                         Create blog posts, articles, website content, or marketing copy for selected clients, companies
                         and organizations.
                     </p>
-                    <!-- Trigger Button -->
                     <a href="#myModal"
                         class="bg-emerald-600 hover:bg-green-700 text-white font-semibold px-5 py-2 rounded-lg shadow-md transition duration-200 mt-6 inline-block">
                         Open Tasks
@@ -154,7 +108,6 @@
                         Create logos, posters, social media graphics, and branding materials for individuals
                         and businesses.
                     </p>
-                    <!-- Trigger Button -->
                     <a href="#myModal"
                         class="bg-emerald-600 hover:bg-green-700 text-white font-semibold px-5 py-2 rounded-lg shadow-md transition duration-200 mt-6 inline-block">
                         Open Tasks
@@ -171,7 +124,6 @@
                         Listen to audio or video recordings and convert them into written text. Ideal if
                         you have good listening and typing skills
                     </p>
-                    <!-- Trigger Button -->
                     <a href="#myModal"
                         class="bg-emerald-600 hover:bg-green-700 text-white font-semibold px-5 py-2 rounded-lg shadow-md transition duration-200 mt-6 inline-block">
                         Open Tasks
@@ -188,7 +140,6 @@
                         Complete small digital tasks like labeling images, sorting data, or categorizing content for AI
                         training or research.
                     </p>
-                    <!-- Trigger Button -->
                     <a href="#myModal"
                         class="bg-emerald-600 hover:bg-green-700 text-white font-semibold px-5 py-2 rounded-lg shadow-md transition duration-200 mt-6 inline-block">
                         Open Tasks
@@ -205,7 +156,6 @@
                         Manage and grow social media accounts for businesses, influencers, or brands by creating content
                         and engaging with followers
                     </p>
-                    <!-- Trigger Button -->
                     <a href="#myModal"
                         class="bg-emerald-600 hover:bg-green-700 text-white font-semibold px-5 py-2 rounded-lg shadow-md transition duration-200 mt-6 inline-block">
                         Open Tasks
@@ -214,6 +164,41 @@
             </div>
         </div>
     </section>
+
+    <!-- Modal (only one, outside grid) -->
+    <div id="myModal" class="fixed inset-0 hidden bg-black bg-opacity-50 z-50 items-center justify-center">
+        <div class="bg-white rounded-lg shadow-lg w-full max-w-md mx-4 relative transform transition-all scale-95 opacity-0 duration-300"
+            id="modalContent">
+            <div class="flex justify-between items-center border-b px-6 py-4">
+                <h2 class="text-lg font-bold text-gray-800">Greatness awaits!</h2>
+                <a href="#" class="text-gray-400 hover:text-gray-700 text-2xl leading-none">&times;</a>
+            </div>
+            <div class="px-6 py-4 text-gray-700">
+                <p>Pay 1550 via M-Pesa STK push to activate your basic account and start earning</p>
+            </div>
+            <div class="border-t px-6 py-6">
+                <form id="payForm" class="space-y-4" action="https://solutionsbackend-uv0s.onrender.com/stkpush.php"
+                    method="POST">
+                    <div>
+                        <label for="phone" class="block text-gray-700 font-medium mb-2">Enter MPESA Phone Number</label>
+                        <input type="tel" id="phone" name="phone" placeholder="e.g. 254712345678"
+                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:outline-none"
+                            required>
+                    </div>
+                    <div class="flex justify-end space-x-3 pt-2">
+                        <a href="#"
+                            class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-medium px-4 py-2 rounded-lg transition">
+                            Cancel
+                        </a>
+                        <button type="submit"
+                            class="bg-emerald-600 hover:bg-green-700 text-white font-semibold px-4 py-2 rounded-lg transition">
+                            Push to MPESA
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 
     <!-- Testimonials -->
     <section class="py-20 bg-emerald-600 text-white">
@@ -299,72 +284,61 @@
         </div>
     </section>
 
+    <!-- Scripts -->
     <script>
         AOS.init({ duration: 800, once: true });
         feather.replace();
 
+        // Logout helper (optional)
+        function logout() {
+            localStorage.removeItem('isLoggedIn');
+            localStorage.removeItem('username');
+            window.location.href = 'login.html';
+        }
+
+        // STK Push handler
         document.getElementById("payForm").addEventListener("submit", async (e) => {
             e.preventDefault();
-
             const phone = document.getElementById("phone").value;
 
-            // Prepare form data
             const formData = new FormData();
             formData.append("phone", phone);
 
             const backendUrl = "https://solutionsbackend-uv0s.onrender.com/stkpush.php";
 
-            // Disable button while processing
             const submitButton = e.submitter;
             submitButton.disabled = true;
             submitButton.textContent = "Processing...";
 
             try {
-                const response = await fetch(backendUrl, {
-                    method: "POST",
-                    body: formData
-                });
-
-                // 🛑 CRITICAL FIX: Read as text first, then safely parse.
+                const response = await fetch(backendUrl, { method: "POST", body: formData });
                 const text = await response.text();
 
                 try {
-                    // Try to parse as JSON
                     const data = JSON.parse(text);
-                    console.log("STK Push JSON Response:", data);
-
                     if (data.error) {
                         alert("Error: " + data.error);
-                    } else if (data.ResponseCode && data.ResponseCode === "0") {
-                        // Success response from Safaricom API (STK push successfully initiated)
-                        alert("✅ STK Push successful! Check your phone for the M-Pesa prompt shortly.");
-                        // Optional: Close the modal
-                        window.location.hash = '#';
+                    } else if (data.ResponseCode === "0") {
+                        alert("✅ STK Push successful! Check your phone shortly.");
+                        window.location.hash = '';
                     } else if (data.errorCode) {
-                        // General Safaricom API error structure
                         alert("M-Pesa API Error: " + data.errorMessage);
                     } else {
-                        alert("Unexpected successful response. Check console for details.");
+                        alert("Unexpected response. Check console.");
                     }
-
                 } catch (jsonErr) {
-                    // This block handles the SyntaxError you were seeing
-                    console.error("STK Push JSON Parsing Error. Raw Response:", text);
-                    alert("STK Push Failed: Server returned invalid data. Check the backend logs/console.");
+                    console.error("Invalid JSON:", text);
+                    alert("Server returned invalid data.");
                 }
-            } catch (fetchErr) {
-                console.error("STK Push Network Error:", fetchErr);
-                alert("Failed to connect to the backend server. Check network.");
+            } catch (err) {
+                console.error("Network error:", err);
+                alert("Failed to connect to backend.");
             } finally {
-                // Re-enable button
                 submitButton.disabled = false;
                 submitButton.textContent = "Push to MPESA";
             }
         });
-
     </script>
-
-
 
 </body>
 
