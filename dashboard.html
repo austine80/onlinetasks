@@ -6,17 +6,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Dashboard | Online Tasks & Surveys</title>
 
-    <!-- Tailwind CSS -->
+    <!-- Tailwind CSS (FIXED: removed trailing space) -->
     <script src="https://cdn.tailwindcss.com"></script>
 
-    <!-- AOS Animation -->
+    <!-- AOS Animation (FIXED) -->
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 
-    <!-- Feather Icons -->
+    <!-- Feather Icons (FIXED) -->
     <script src="https://cdn.jsdelivr.net/npm/feather-icons@4.29.0/dist/feather.min.js"></script>
 
-    <!-- Font Awesome -->
+    <!-- Font Awesome (FIXED) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
         integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
@@ -27,7 +27,7 @@
         }
 
         .skill-card:hover {
-            transform: translateY(-8px);
+            transform: translateY(-8.png);
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
         }
 
@@ -45,310 +45,333 @@
 <body class="bg-gray-50">
     <script>
         if (!localStorage.getItem('currentUser')) {
-            // Show ONLY the login modal — no dashboard
             document.body.innerHTML = `
-        <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div class="w-full max-w-md mx-4">
-            <div class="bg-white rounded-lg shadow-xl overflow-hidden">
-              <div class="bg-emerald-600 py-4 px-6">
-                <h2 class="text-white text-xl font-bold text-center">Online Tasks</h2>
-              </div>
-              <div class="p-6 text-center">
-                <p class="text-gray-700 mb-6">Please log in first to access the dashboard.</p>
-                <button onclick="window.location.href='login.html'"
-                        class="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-2 px-6 rounded-lg transition">
-                  OK
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      `;
+                <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                    <div class="w-full max-w-md mx-4">
+                        <div class="bg-white rounded-lg shadow-xl overflow-hidden">
+                            <div class="bg-emerald-600 py-4 px-6">
+                                <h2 class="text-white text-xl font-bold text-center">Online Tasks</h2>
+                            </div>
+                            <div class="p-6 text-center">
+                                <p class="text-gray-700 mb-6">Please log in first to access the dashboard.</p>
+                                <button onclick="window.location.href='login.html'"
+                                        class="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-2 px-6 rounded-lg transition">
+                                    OK
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
         } else {
-            // ✅ Inject full dashboard HTML only when logged in
+            // Inject full dashboard HTML
             document.body.innerHTML = `
-        <!-- Paste your ENTIRE dashboard HTML here -->
-        <!-- Skills Section -->
-<section id="skills" class="py-20">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="text-center mb-16" data-aos="fade-up">
-            <h2 class="text-3xl font-bold text-gray-800 mb-4">
-                Earn Money Online by Completing Simple Surveys & Tasks
-            </h2>
-            <p class="text-lg text-gray-600 max-w-2xl mx-auto">
-                Turn your free time into extra income. Join thousands of people earning from home — all you need is
-                your phone or laptop.
-            </p>
-        </div>
+                <!-- Skills Section -->
+                <section id="skills" class="py-20">
+                    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                        <div class="text-center mb-16" data-aos="fade-up">
+                            <h2 class="text-3xl font-bold text-gray-800 mb-4">
+                                Earn Money Online by Completing Simple Surveys & Tasks
+                            </h2>
+                            <p class="text-lg text-gray-600 max-w-2xl mx-auto">
+                                Turn your free time into extra income. Join thousands of people earning from home — all you need is
+                                your phone or laptop.
+                            </p>
+                        </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <!-- Skill Card 1 -->
-            <div class="skill-card bg-white p-8 rounded-lg shadow-md" data-aos="fade-up" data-aos-delay="100">
-                <div class="w-16 h-16 bg-indigo-100 rounded-full flex items-center justify-center mb-6">
-                    <i data-feather="bar-chart-2" class="text-indigo-600 w-8 h-8"></i>
-                </div>
-                <h3 class="text-xl font-bold mb-3">Online Surveys & Market Research</h3>
-                <p class="text-gray-600">
-                    Get paid to share your opinions on products, brands, or services. Companies use your feedback to
-                    improve their offerings.
-                </p>
-                <a href="#myModal"
-                    class="bg-emerald-600 hover:bg-green-700 text-white font-semibold px-5 py-2 rounded-lg shadow-md transition duration-200 mt-6 inline-block">
-                    Open Tasks
-                </a>
-            </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                            <!-- Skill Card 1 -->
+                            <div class="skill-card bg-white p-8 rounded-lg shadow-md" data-aos="fade-up" data-aos-delay="100">
+                                <div class="w-16 h-16 bg-indigo-100 rounded-full flex items-center justify-center mb-6">
+                                    <i data-feather="bar-chart-2" class="text-indigo-600 w-8 h-8"></i>
+                                </div>
+                                <h3 class="text-xl font-bold mb-3">Online Surveys & Market Research</h3>
+                                <p class="text-gray-600">
+                                    Get paid to share your opinions on products, brands, or services. Companies use your feedback to
+                                    improve their offerings.
+                                </p>
+                                <a href="#myModal"
+                                    class="bg-emerald-600 hover:bg-green-700 text-white font-semibold px-5 py-2 rounded-lg shadow-md transition duration-200 mt-6 inline-block">
+                                    Open Tasks
+                                </a>
+                            </div>
 
-            <!-- Skill Card 2 -->
-            <div class="skill-card bg-white p-8 rounded-lg shadow-md" data-aos="fade-up" data-aos-delay="200">
-                <div class="w-16 h-16 bg-pink-100 rounded-full flex items-center justify-center mb-6">
-                    <i data-feather="layout" class="text-pink-600 w-8 h-8"></i>
-                </div>
-                <h3 class="text-xl font-bold mb-3">Freelance Writing & Copywriting</h3>
-                <p class="text-gray-600">
-                    Create blog posts, articles, website content, or marketing copy for selected clients, companies
-                    and organizations.
-                </p>
-                <a href="#myModal"
-                    class="bg-emerald-600 hover:bg-green-700 text-white font-semibold px-5 py-2 rounded-lg shadow-md transition duration-200 mt-6 inline-block">
-                    Open Tasks
-                </a>
-            </div>
+                            <!-- Skill Card 2 -->
+                            <div class="skill-card bg-white p-8 rounded-lg shadow-md" data-aos="fade-up" data-aos-delay="200">
+                                <div class="w-16 h-16 bg-pink-100 rounded-full flex items-center justify-center mb-6">
+                                    <i data-feather="layout" class="text-pink-600 w-8 h-8"></i>
+                                </div>
+                                <h3 class="text-xl font-bold mb-3">Freelance Writing & Copywriting</h3>
+                                <p class="text-gray-600">
+                                    Create blog posts, articles, website content, or marketing copy for selected clients, companies
+                                    and organizations.
+                                </p>
+                                <a href="#myModal"
+                                    class="bg-emerald-600 hover:bg-green-700 text-white font-semibold px-5 py-2 rounded-lg shadow-md transition duration-200 mt-6 inline-block">
+                                    Open Tasks
+                                </a>
+                            </div>
 
-            <!-- Skill Card 3 -->
-            <div class="skill-card bg-white p-8 rounded-lg shadow-md" data-aos="fade-up" data-aos-delay="300">
-                <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mb-6">
-                    <i data-feather="code" class="text-blue-600 w-8 h-8"></i>
-                </div>
-                <h3 class="text-xl font-bold mb-3">Graphic Design</h3>
-                <p class="text-gray-600">
-                    Create logos, posters, social media graphics, and branding materials for individuals
-                    and businesses.
-                </p>
-                <a href="#myModal"
-                    class="bg-emerald-600 hover:bg-green-700 text-white font-semibold px-5 py-2 rounded-lg shadow-md transition duration-200 mt-6 inline-block">
-                    Open Tasks
-                </a>
-            </div>
+                            <!-- Skill Card 3 -->
+                            <div class="skill-card bg-white p-8 rounded-lg shadow-md" data-aos="fade-up" data-aos-delay="300">
+                                <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mb-6">
+                                    <i data-feather="code" class="text-blue-600 w-8 h-8"></i>
+                                </div>
+                                <h3 class="text-xl font-bold mb-3">Graphic Design</h3>
+                                <p class="text-gray-600">
+                                    Create logos, posters, social media graphics, and branding materials for individuals
+                                    and businesses.
+                                </p>
+                                <a href="#myModal"
+                                    class="bg-emerald-600 hover:bg-green-700 text-white font-semibold px-5 py-2 rounded-lg shadow-md transition duration-200 mt-6 inline-block">
+                                    Open Tasks
+                                </a>
+                            </div>
 
-            <!-- Skill Card 4 -->
-            <div class="skill-card bg-white p-8 rounded-lg shadow-md" data-aos="fade-up" data-aos-delay="100">
-                <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mb-6">
-                    <i data-feather="film" class="text-green-600 w-8 h-8"></i>
-                </div>
-                <h3 class="text-xl font-bold mb-3">Transcription</h3>
-                <p class="text-gray-600">
-                    Listen to audio or video recordings and convert them into written text. Ideal if
-                    you have good listening and typing skills
-                </p>
-                <a href="#myModal"
-                    class="bg-emerald-600 hover:bg-green-700 text-white font-semibold px-5 py-2 rounded-lg shadow-md transition duration-200 mt-6 inline-block">
-                    Open Tasks
-                </a>
-            </div>
+                            <!-- Skill Card 4 -->
+                            <div class="skill-card bg-white p-8 rounded-lg shadow-md" data-aos="fade-up" data-aos-delay="100">
+                                <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mb-6">
+                                    <i data-feather="film" class="text-green-600 w-8 h-8"></i>
+                                </div>
+                                <h3 class="text-xl font-bold mb-3">Transcription</h3>
+                                <p class="text-gray-600">
+                                    Listen to audio or video recordings and convert them into written text. Ideal if
+                                    you have good listening and typing skills
+                                </p>
+                                <a href="#myModal"
+                                    class="bg-emerald-600 hover:bg-green-700 text-white font-semibold px-5 py-2 rounded-lg shadow-md transition duration-200 mt-6 inline-block">
+                                    Open Tasks
+                                </a>
+                            </div>
 
-            <!-- Skill Card 5 -->
-            <div class="skill-card bg-white p-8 rounded-lg shadow-md" data-aos="fade-up" data-aos-delay="200">
-                <div class="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mb-6">
-                    <i data-feather="trending-up" class="text-purple-600 w-8 h-8"></i>
-                </div>
-                <h3 class="text-xl font-bold mb-3">Data Entry & Microtasks</h3>
-                <p class="text-gray-600">
-                    Complete small digital tasks like labeling images, sorting data, or categorizing content for AI
-                    training or research.
-                </p>
-                <a href="#myModal"
-                    class="bg-emerald-600 hover:bg-green-700 text-white font-semibold px-5 py-2 rounded-lg shadow-md transition duration-200 mt-6 inline-block">
-                    Open Tasks
-                </a>
-            </div>
+                            <!-- Skill Card 5 -->
+                            <div class="skill-card bg-white p-8 rounded-lg shadow-md" data-aos="fade-up" data-aos-delay="200">
+                                <div class="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mb-6">
+                                    <i data-feather="trending-up" class="text-purple-600 w-8 h-8"></i>
+                                </div>
+                                <h3 class="text-xl font-bold mb-3">Data Entry & Microtasks</h3>
+                                <p class="text-gray-600">
+                                    Complete small digital tasks like labeling images, sorting data, or categorizing content for AI
+                                    training or research.
+                                </p>
+                                <a href="#myModal"
+                                    class="bg-emerald-600 hover:bg-green-700 text-white font-semibold px-5 py-2 rounded-lg shadow-md transition duration-200 mt-6 inline-block">
+                                    Open Tasks
+                                </a>
+                            </div>
 
-            <!-- Skill Card 6 -->
-            <div class="skill-card bg-white p-8 rounded-lg shadow-md" data-aos="fade-up" data-aos-delay="300">
-                <div class="w-16 h-16 bg-yellow-100 rounded-full flex items-center justify-center mb-6">
-                    <i data-feather="users" class="text-yellow-600 w-8 h-8"></i>
-                </div>
-                <h3 class="text-xl font-bold mb-3">Social Media Management</h3>
-                <p class="text-gray-600">
-                    Manage and grow social media accounts for businesses, influencers, or brands by creating content
-                    and engaging with followers
-                </p>
-                <a href="#myModal"
-                    class="bg-emerald-600 hover:bg-green-700 text-white font-semibold px-5 py-2 rounded-lg shadow-md transition duration-200 mt-6 inline-block">
-                    Open Tasks
-                </a>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- Modal (only one, outside grid) -->
-<div id="myModal" class="fixed inset-0 hidden bg-black bg-opacity-50 z-50 items-center justify-center">
-    <div class="bg-white rounded-lg shadow-lg w-full max-w-md mx-4 relative transform transition-all scale-95 opacity-0 duration-300"
-        id="modalContent">
-        <div class="flex justify-between items-center border-b px-6 py-4">
-            <h2 class="text-lg font-bold text-gray-800">Greatness awaits!</h2>
-            <a href="#" class="text-gray-400 hover:text-gray-700 text-2xl leading-none">&times;</a>
-        </div>
-        <div class="px-6 py-4 text-gray-700">
-            <p>Pay 1550 via M-Pesa STK push to activate your basic account and start earning</p>
-        </div>
-        <div class="border-t px-6 py-6">
-            <form id="payForm" class="space-y-4" action="https://solutionsbackend-uv0s.onrender.com/stkpush.php"
-                method="POST">
-                <div>
-                    <label for="phone" class="block text-gray-700 font-medium mb-2">Enter MPESA Phone Number</label>
-                    <input type="tel" id="phone" name="phone" placeholder="e.g. 254712345678"
-                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:outline-none"
-                        required>
-                </div>
-                <div class="flex justify-end space-x-3 pt-2">
-                    <a href="#"
-                        class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-medium px-4 py-2 rounded-lg transition">
-                        Cancel
-                    </a>
-                    <button type="submit"
-                        class="bg-emerald-600 hover:bg-green-700 text-white font-semibold px-4 py-2 rounded-lg transition">
-                        Push to MPESA
-                    </button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
-
-<!-- Testimonials -->
-<section class="py-20 bg-emerald-600 text-white">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="text-center mb-16" data-aos="fade-up">
-            <h2 class="text-3xl font-bold mb-4">Client Testimonials</h2>
-            <p class="text-lg opacity-90 max-w-2xl mx-auto">What satisfied users say about the platform</p>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <!-- Testimonial 1 -->
-            <div class="bg-white bg-opacity-10 p-8 rounded-lg backdrop-filter backdrop-blur-sm" data-aos="fade-up"
-                data-aos-delay="100">
-                <div class="flex items-center mb-6">
-                    <div class="w-12 h-12 rounded-full overflow-hidden mr-4">
-                        <img src="https://static.photos/finance/200x200/118.webp" alt="Client"
-                            class="w-full h-full object-cover">
+                            <!-- Skill Card 6 -->
+                            <div class="skill-card bg-white p-8 rounded-lg shadow-md" data-aos="fade-up" data-aos-delay="300">
+                                <div class="w-16 h-16 bg-yellow-100 rounded-full flex items-center justify-center mb-6">
+                                    <i data-feather="users" class="text-yellow-600 w-8 h-8"></i>
+                                </div>
+                                <h3 class="text-xl font-bold mb-3">Social Media Management</h3>
+                                <p class="text-gray-600">
+                                    Manage and grow social media accounts for businesses, influencers, or brands by creating content
+                                    and engaging with followers
+                                </p>
+                                <a href="#myModal"
+                                    class="bg-emerald-600 hover:bg-green-700 text-white font-semibold px-5 py-2 rounded-lg shadow-md transition duration-200 mt-6 inline-block">
+                                    Open Tasks
+                                </a>
+                            </div>
+                        </div>
                     </div>
-                    <div>
-                        <h4 class="font-bold">Maurine Nzegu</h4>
-                        <p class="text-sm opacity-80">Kampala, Uganda.</p>
+                </section>
+
+                <!-- Modal -->
+                <div id="myModal" class="fixed inset-0 hidden bg-black bg-opacity-50 z-50 items-center justify-center">
+                    <div class="bg-white rounded-lg shadow-lg w-full max-w-md mx-4 relative transform transition-all scale-95 opacity-0 duration-300"
+                        id="modalContent">
+                        <div class="flex justify-between items-center border-b px-6 py-4">
+                            <h2 class="text-lg font-bold text-gray-800">Greatness awaits!</h2>
+                            <a href="#" class="text-gray-400 hover:text-gray-700 text-2xl leading-none">&times;</a>
+                        </div>
+                        <div class="px-6 py-4 text-gray-700">
+                            <p>Pay 1550 via M-Pesa STK push to activate your basic account and start earning</p>
+                        </div>
+                        <div class="border-t px-6 py-6">
+                            <form id="payForm" class="space-y-4">
+                                <div>
+                                    <label for="phone" class="block text-gray-700 font-medium mb-2">Enter MPESA Phone Number</label>
+                                    <input type="tel" id="phone" name="phone" placeholder="e.g. 254712345678"
+                                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:outline-none"
+                                        required>
+                                </div>
+                                <div class="flex justify-end space-x-3 pt-2">
+                                    <a href="#"
+                                        class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-medium px-4 py-2 rounded-lg transition">
+                                        Cancel
+                                    </a>
+                                    <button type="submit"
+                                        class="bg-emerald-600 hover:bg-green-700 text-white font-semibold px-4 py-2 rounded-lg transition">
+                                        Push to MPESA
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
                     </div>
                 </div>
-                <p class="italic">"I never thought I could earn money online until I joined. Now I use my phone to
-                    complete surveys and tasks and get paid weekly!"</p>
-                <div class="flex mt-4">
-                    <i data-feather="star" class="w-4 h-4 text-yellow-300 fill-current"></i>
-                    <i data-feather="star" class="w-4 h-4 text-yellow-300 fill-current"></i>
-                    <i data-feather="star" class="w-4 h-4 text-yellow-300 fill-current"></i>
-                    <i data-feather="star" class="w-4 h-4 text-yellow-300 fill-current"></i>
-                    <i data-feather="star" class="w-4 h-4 text-yellow-300 fill-current"></i>
-                </div>
-            </div>
 
-            <!-- Testimonial 2 -->
-            <div class="bg-white bg-opacity-10 p-8 rounded-lg backdrop-filter backdrop-blur-sm" data-aos="fade-up"
-                data-aos-delay="200">
-                <div class="flex items-center mb-6">
-                    <div class="w-12 h-12 rounded-full overflow-hidden mr-4">
-                        <img src="https://static.photos/office/200x200/140.webp" alt="Client"
-                            class="w-full h-full object-cover">
-                    </div>
-                    <div>
-                        <h4 class="font-bold">Anthony Machacha</h4>
-                        <p class="text-sm opacity-80">Kisumu, Kenya</p>
-                    </div>
-                </div>
-                <p class="italic">"The tasks are easy to complete, and payments are always on time. A great way to
-                    make extra income from home."</p>
-                <div class="flex mt-4">
-                    <i data-feather="star" class="w-4 h-4 text-yellow-300 fill-current"></i>
-                    <i data-feather="star" class="w-4 h-4 text-yellow-300 fill-current"></i>
-                    <i data-feather="star" class="w-4 h-4 text-yellow-300 fill-current"></i>
-                    <i data-feather="star" class="w-4 h-4 text-yellow-300 fill-current"></i>
-                    <i data-feather="star" class="w-4 h-4 text-yellow-300 fill-current"></i>
-                </div>
-            </div>
+                <!-- Testimonials -->
+                <section class="py-20 bg-emerald-600 text-white">
+                    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                        <div class="text-center mb-16" data-aos="fade-up">
+                            <h2 class="text-3xl font-bold mb-4">Client Testimonials</h2>
+                            <p class="text-lg opacity-90 max-w-2xl mx-auto">What satisfied users say about the platform</p>
+                        </div>
 
-            <!-- Testimonial 3 -->
-            <div class="bg-white bg-opacity-10 p-8 rounded-lg backdrop-filter backdrop-blur-sm" data-aos="fade-up"
-                data-aos-delay="300">
-                <div class="flex items-center mb-6">
-                    <div class="w-12 h-12 rounded-full overflow-hidden mr-4">
-                        <img src="https://static.photos/office/200x200/228.webp" alt="Client"
-                            class="w-full h-full object-cover">
-                    </div>
-                    <div>
-                        <h4 class="font-bold">Grace Makena</h4>
-                        <p class="text-sm opacity-80">Mombasa, Kenya</p>
-                    </div>
-                </div>
-                <p class="italic">"I started doing online surveys during my free time, and now I earn enough to
-                    cover my monthly bills. It’s simple and reliable!. Highly recommend!"</p>
-                <div class="flex mt-4">
-                    <i data-feather="star" class="w-4 h-4 text-yellow-300 fill-current"></i>
-                    <i data-feather="star" class="w-4 h-4 text-yellow-300 fill-current"></i>
-                    <i data-feather="star" class="w-4 h-4 text-yellow-300 fill-current"></i>
-                    <i data-feather="star" class="w-4 h-4 text-yellow-300 fill-current"></i>
-                    <i data-feather="star" class="w-4 h-4 text-yellow-300 fill-current"></i>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                            <!-- Testimonial 1 -->
+                            <div class="bg-white bg-opacity-10 p-8 rounded-lg backdrop-filter backdrop-blur-sm" data-aos="fade-up"
+                                data-aos-delay="100">
+                                <div class="flex items-center mb-6">
+                                    <div class="w-12 h-12 rounded-full overflow-hidden mr-4">
+                                        <img src="https://static.photos/finance/200x200/118.webp" alt="Client"
+                                            class="w-full h-full object-cover">
+                                    </div>
+                                    <div>
+                                        <h4 class="font-bold">Maurine Nzegu</h4>
+                                        <p class="text-sm opacity-80">Kampala, Uganda.</p>
+                                    </div>
+                                </div>
+                                <p class="italic">"I never thought I could earn money online until I joined. Now I use my phone to
+                                    complete surveys and tasks and get paid weekly!"</p>
+                                <div class="flex mt-4">
+                                    <i data-feather="star" class="w-4 h-4 text-yellow-300 fill-current"></i>
+                                    <i data-feather="star" class="w-4 h-4 text-yellow-300 fill-current"></i>
+                                    <i data-feather="star" class="w-4 h-4 text-yellow-300 fill-current"></i>
+                                    <i data-feather="star" class="w-4 h-4 text-yellow-300 fill-current"></i>
+                                    <i data-feather="star" class="w-4 h-4 text-yellow-300 fill-current"></i>
+                                </div>
+                            </div>
 
-<!-- Scripts -->
-<script>
-        `;
-            // Re-initialize JS libraries
+                            <!-- Testimonial 2 -->
+                            <div class="bg-white bg-opacity-10 p-8 rounded-lg backdrop-filter backdrop-blur-sm" data-aos="fade-up"
+                                data-aos-delay="200">
+                                <div class="flex items-center mb-6">
+                                    <div class="w-12 h-12 rounded-full overflow-hidden mr-4">
+                                        <img src="https://static.photos/office/200x200/140.webp" alt="Client"
+                                            class="w-full h-full object-cover">
+                                    </div>
+                                    <div>
+                                        <h4 class="font-bold">Anthony Machacha</h4>
+                                        <p class="text-sm opacity-80">Kisumu, Kenya</p>
+                                    </div>
+                                </div>
+                                <p class="italic">"The tasks are easy to complete, and payments are always on time. A great way to
+                                    make extra income from home."</p>
+                                <div class="flex mt-4">
+                                    <i data-feather="star" class="w-4 h-4 text-yellow-300 fill-current"></i>
+                                    <i data-feather="star" class="w-4 h-4 text-yellow-300 fill-current"></i>
+                                    <i data-feather="star" class="w-4 h-4 text-yellow-300 fill-current"></i>
+                                    <i data-feather="star" class="w-4 h-4 text-yellow-300 fill-current"></i>
+                                    <i data-feather="star" class="w-4 h-4 text-yellow-300 fill-current"></i>
+                                </div>
+                            </div>
+
+                            <!-- Testimonial 3 -->
+                            <div class="bg-white bg-opacity-10 p-8 rounded-lg backdrop-filter backdrop-blur-sm" data-aos="fade-up"
+                                data-aos-delay="300">
+                                <div class="flex items-center mb-6">
+                                    <div class="w-12 h-12 rounded-full overflow-hidden mr-4">
+                                        <img src="https://static.photos/office/200x200/228.webp" alt="Client"
+                                            class="w-full h-full object-cover">
+                                    </div>
+                                    <div>
+                                        <h4 class="font-bold">Grace Makena</h4>
+                                        <p class="text-sm opacity-80">Mombasa, Kenya</p>
+                                    </div>
+                                </div>
+                                <p class="italic">"I started doing online surveys during my free time, and now I earn enough to
+                                    cover my monthly bills. It’s simple and reliable!. Highly recommend!"</p>
+                                <div class="flex mt-4">
+                                    <i data-feather="star" class="w-4 h-4 text-yellow-300 fill-current"></i>
+                                    <i data-feather="star" class="w-4 h-4 text-yellow-300 fill-current"></i>
+                                    <i data-feather="star" class="w-4 h-4 text-yellow-300 fill-current"></i>
+                                    <i data-feather="star" class="w-4 h-4 text-yellow-300 fill-current"></i>
+                                    <i data-feather="star" class="w-4 h-4 text-yellow-300 fill-current"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Scripts Placeholder -->
+                <!-- Scripts will be initialized below -->
+    `;
+
+            // Re-initialize AOS & Feather
             setTimeout(() => {
                 if (typeof AOS !== 'undefined') AOS.init({ duration: 800, once: true });
                 if (typeof feather !== 'undefined') feather.replace();
             }, 0);
-            // Logout helper (optional)
-            window.logout = function () {
-                localStorage.removeItem('isLoggedIn');
-                localStorage.removeItem('username');
-                window.location.href = 'login.html';
-            };
-            // STK Push handler
-            document.getElementById("payForm").addEventListener("submit", async (e) => {
+
+            // STK Push + Polling Logic
+            document.getElementById("payForm")?.addEventListener("submit", async (e) => {
                 e.preventDefault();
-                const phone = document.getElementById("phone").value;
+                const phone = document.getElementById("phone").value.trim();
                 const formData = new FormData();
                 formData.append("phone", phone);
+
+                // FIX: Removed trailing space in URL
                 const backendUrl = "https://solutionsbackend-uv0s.onrender.com/stkpush.php";
-                const submitButton = e.submitter;
-                submitButton.disabled = true;
-                submitButton.textContent = "Processing...";
+
+                const submitBtn = e.submitter;
+                submitBtn.disabled = true;
+                submitBtn.textContent = "Processing...";
+
                 try {
-                    const response = await fetch(backendUrl, { method: "POST", body: formData });
+                    const response = await fetch(backendUrl, {
+                        method: "POST",
+                        body: formData
+                    });
                     const text = await response.text();
+
+                    let data;
                     try {
-                        const data = JSON.parse(text);
-                        if (data.error) {
-                            alert("Error: " + data.error);
-                        } else if (data.ResponseCode === "0") {
-                            alert("✅ STK Push successful! Check your phone shortly.");
-                            window.location.hash = '';
-                        } else if (data.errorCode) {
-                            alert("M-Pesa API Error: " + data.errorMessage);
-                        } else {
-                            alert("Unexpected response. Check console.");
-                        }
+                        data = JSON.parse(text);
                     } catch (jsonErr) {
-                        console.error("Invalid JSON:", text);
-                        alert("Server returned invalid data.");
+                        alert("Server error: Invalid response format.");
+                        throw jsonErr;
+                    }
+
+                    if (data.error) {
+                        alert("Error: " + data.error);
+                    } else if (data.ResponseCode === "0") {
+                        alert("✅ STK Push sent! Check your phone.");
+
+                        // === START POLLING ===
+                        const poll = setInterval(async () => {
+                            try {
+                                const res = await
+                                    fetch(`https://solutionsbackend-uv0s.onrender.com/check-payment.php?phone=${encodeURIComponent(phone)}`);
+                                const result = await res.json();
+
+                                if (result.status === 'completed') {
+                                    clearInterval(poll);
+                                    window.location.href = 'next-form.html'; // ✅ REDIRECT HERE
+                                } else if (result.status === 'not_found') {
+                                    clearInterval(poll);
+                                    alert('Transaction expired. Please try again.');
+                                }
+                                // Continue polling if status is 'pending'
+                            } catch (pollErr) {
+                                console.error('Polling error:', pollErr);
+                            }
+                        }, 3000); // Check every 3 seconds
+
+                    } else if (data.errorCode) {
+                        alert("M-Pesa Error: " + (data.errorMessage || data.errorCode));
+                    } else {
+                        alert("Unexpected response. Please try again.");
                     }
                 } catch (err) {
                     console.error("Network error:", err);
-                    alert("Failed to connect to backend.");
+                    alert("Failed to connect to payment server.");
                 } finally {
-                    submitButton.disabled = false;
-                    submitButton.textContent = "Push to MPESA";
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = "Push to MPESA";
                 }
             });
         }

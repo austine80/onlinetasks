@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Success | Online Tasks & Surveys</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Feather Icons -->
+    <script src="https://cdn.jsdelivr.net/npm/feather-icons@4.29.0/dist/feather.min.js"></script>
+    <style>
+        .fade-in {
+            animation: fadeIn 0.6s ease-out forwards;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 flex items-center justify-center min-h-screen p-4">
+    <!-- 🔒 Auth Guard -->
+    <script>
+        if (!localStorage.getItem('currentUser')) {
+            alert('Please log in first.');
+            window.location.replace('login.html');
+        }
+    </script>
+    <div class="fade-in max-w-md w-full bg-white rounded-2xl shadow-lg overflow-hidden border border-emerald-100">
+        <div class="bg-emerald-600 py-5 px-6">
+            <div class="flex items-center justify-center">
+                <i data-feather="check-circle" class="text-white w-7 h-7 mr-2"></i>
+                <h1 class="text-white text-xl font-bold">Application Submitted!</h1>
+            </div>
+        </div>
+        <div class="p-6 text-center">
+            <p class="text-gray-700 mb-2">
+                Thank you! We’ve received your details.
+            </p>
+            <p id="emailMessage" class="text-emerald-700 font-medium mb-4">
+                <!-- Email will be inserted here -->
+            </p>
+            <p class="text-gray-600 text-sm leading-relaxed">
+                You’ll receive an email with available tasks within <strong>3 working days</strong>.
+                Be ready to apply directly through the links we send.
+            </p>
+            <div class="mt-6">
+                <a href="dashboard.html"
+                    class="inline-block bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-2 px-5 rounded-lg transition shadow">
+                    Back to Dashboard
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Display the submitted email from localStorage (if available)
+        const user = JSON.parse(localStorage.getItem('currentUser'));
+        const emailElem = document.getElementById('emailMessage');
+
+        if (user && user.email) {
+            emailElem.textContent = `Registered email: ${user.email}`;
+        } else {
+            emailElem.textContent = "We’ll contact you soon.";
+        }
+
+        // Initialize Feather Icons
+        feather.replace();
+    </script>
+</body>
+
+</html>
