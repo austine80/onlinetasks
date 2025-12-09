@@ -39,16 +39,19 @@
             opacity: 1;
             transform: scale(1);
         }
+
+        body:not(.auth-checked)>*:not(script) {
+            display: none;
+        }
     </style>
 </head>
 
-<body class="bg-gray-50">
 
-    <!-- 🔒 AUTH GUARD: Redirect if not logged in -->
-    <script>
-        if (!localStorage.getItem('currentUser')) {
-            // Prevent dashboard content from showing
-            document.body.innerHTML = `
+<!-- 🔒 AUTH GUARD: Redirect if not logged in -->
+<script>
+    if (!localStorage.getItem('currentUser')) {
+        // Prevent dashboard content from showing
+        document.body.innerHTML = `
       <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
         <div class="w-full max-w-md mx-4">
           <div class="bg-white rounded-lg shadow-xl overflow-hidden">
@@ -68,8 +71,11 @@
         </div>
       </div>
     `;
-        }
-    </script>
+    }
+</script>
+
+<body class="bg-gray-50">
+
 
     <!-- Skills Section -->
     <section id="skills" class="py-20">
