@@ -1,381 +1,832 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Dashboard | Online Tasks & Surveys</title>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Dashboard | Online Tasks & Surveys</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet"/>
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/feather-icons@4.29.0/dist/feather.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous"/>
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
 
-    <!-- Tailwind CSS (FIXED: removed trailing space) -->
-    <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    /* ── Base ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --emerald: #059669;
+      --emerald-light: #d1fae5;
+      --emerald-dark: #047857;
+      --gold: #f59e0b;
+      --bg: #f0fdf6;
+      --card: #ffffff;
+      --text: #1a2e22;
+      --muted: #6b7280;
+      --radius: 16px;
+      --shadow: 0 4px 24px rgba(5,150,105,0.10);
+    }
+    body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); overflow-x: hidden; }
+    h1,h2,h3,h4 { font-family: 'Sora', sans-serif; }
 
-    <!-- AOS Animation (FIXED) -->
-    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
-    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    /* ── Floating Background Particles ── */
+    #particles-bg {
+      position: fixed; inset: 0; pointer-events: none; z-index: 0;
+      overflow: hidden;
+    }
+    .particle {
+      position: absolute;
+      bottom: -80px;
+      opacity: 0;
+      border-radius: 12px;
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      border: 1px solid rgba(5,150,105,0.15);
+      background: rgba(5,150,105,0.06);
+      animation: floatUp linear infinite;
+    }
+    @keyframes floatUp {
+      0%   { transform: translateY(0) rotate(0deg); opacity: 0; }
+      10%  { opacity: 0.5; }
+      90%  { opacity: 0.3; }
+      100% { transform: translateY(-110vh) rotate(25deg); opacity: 0; }
+    }
 
-    <!-- Feather Icons (FIXED) -->
-    <script src="https://cdn.jsdelivr.net/npm/feather-icons@4.29.0/dist/feather.min.js"></script>
+    /* ── Navbar ── */
+    #navbar {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(255,255,255,0.88);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(5,150,105,0.15);
+      padding: 0 1.5rem;
+      display: flex; align-items: center; justify-content: space-between;
+      height: 64px;
+    }
+    .nav-logo { font-family:'Sora',sans-serif; font-weight:700; font-size:1.25rem; color: var(--emerald); letter-spacing:-0.5px; }
+    .nav-greeting { font-size:0.875rem; color: var(--muted); }
+    .nav-greeting span { color: var(--emerald); font-weight:600; }
+    #mute-btn {
+      background: var(--emerald-light); border: none; border-radius: 50%;
+      width: 36px; height: 36px; cursor: pointer; display:flex; align-items:center; justify-content:center;
+      color: var(--emerald); font-size: 14px; transition: background .2s;
+    }
+    #mute-btn:hover { background: #a7f3d0; }
 
-    <!-- Font Awesome (FIXED) -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
-        integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
-        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    /* ── Carousel ── */
+    #carousel-section { position: relative; z-index:1; }
+    .carousel-wrapper {
+      position: relative; width: 100%; aspect-ratio: 16/9; overflow: hidden;
+      background: #0d2018;
+    }
+    @media(max-width:640px) { .carousel-wrapper { aspect-ratio: 4/3; } }
+    .carousel-slide {
+      position: absolute; inset: 0; opacity: 0;
+      transition: opacity 0.9s ease;
+    }
+    .carousel-slide.active { opacity: 1; }
+    .carousel-slide img, .carousel-slide video {
+      width:100%; height:100%; object-fit:cover; object-position:center;
+      display:block;
+    }
+    .slide-overlay {
+      position:absolute; inset:0;
+      background: linear-gradient(to top, rgba(5,40,20,0.75) 0%, rgba(0,0,0,0.1) 60%);
+      display:flex; flex-direction:column; justify-content:flex-end;
+      padding: clamp(1rem, 4vw, 3rem);
+    }
+    .slide-title { font-family:'Sora',sans-serif; font-size:clamp(1.2rem,3vw,2.4rem); font-weight:700; color:#fff; line-height:1.2; margin-bottom:.5rem; }
+    .slide-sub { font-size:clamp(.75rem,1.5vw,1rem); color:rgba(255,255,255,0.8); max-width:600px; }
+    .carousel-dots { position:absolute; bottom:14px; left:50%; transform:translateX(-50%); display:flex; gap:8px; z-index:10; }
+    .dot {
+      width:8px; height:8px; border-radius:4px; background:rgba(255,255,255,0.4);
+      cursor:pointer; transition:all .3s; border:none;
+    }
+    .dot.active { width:24px; background:#fff; }
+    .carousel-btn {
+      position:absolute; top:50%; transform:translateY(-50%); z-index:10;
+      background:rgba(255,255,255,0.15); backdrop-filter:blur(8px);
+      border:1px solid rgba(255,255,255,0.25); color:#fff;
+      width:40px; height:40px; border-radius:50%; cursor:pointer;
+      display:flex; align-items:center; justify-content:center; font-size:18px;
+      transition: background .2s;
+    }
+    .carousel-btn:hover { background:rgba(255,255,255,0.3); }
+    #carousel-prev { left:12px; }
+    #carousel-next { right:12px; }
 
-    <style>
-        .skill-card {
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
+    /* ── Greeting Banner ── */
+    #greeting-banner {
+      position: relative; z-index:1;
+      background: linear-gradient(135deg, var(--emerald) 0%, #065f46 100%);
+      padding: 2rem 1.5rem;
+      text-align:center; color:#fff;
+    }
+    #greeting-banner h1 { font-size:clamp(1.3rem,3vw,2rem); font-weight:700; margin-bottom:.3rem; }
+    #greeting-banner p { font-size:.95rem; opacity:.85; }
 
-        .skill-card:hover {
-            transform: translateY(-8.png);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-        }
+    /* ── Stats Section ── */
+    #stats-section {
+      position:relative; z-index:1;
+      background: var(--card);
+      border-bottom: 1px solid rgba(5,150,105,0.1);
+      padding: 2.5rem 1.5rem;
+    }
+    .stats-grid {
+      max-width:1100px; margin:0 auto;
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap:1.5rem;
+    }
+    .stat-card {
+      background: var(--bg); border-radius: var(--radius);
+      border: 1px solid rgba(5,150,105,0.12);
+      padding: 1.25rem; text-align:center;
+      transition: transform .2s, box-shadow .2s;
+    }
+    .stat-card:hover { transform: translateY(-3px); box-shadow: var(--shadow); }
+    .stat-icon { font-size:1.5rem; margin-bottom:.5rem; }
+    .stat-num { font-family:'Sora',sans-serif; font-size:1.8rem; font-weight:700; color: var(--emerald); line-height:1; }
+    .stat-label { font-size:.75rem; color: var(--muted); margin-top:.25rem; text-transform:uppercase; letter-spacing:.05em; }
+    .stat-card.countdown .stat-num { font-size:1.4rem; color: var(--gold); }
 
-        #myModal:target {
-            display: flex;
-        }
+    /* ── Skills Grid ── */
+    #skills-section { position:relative; z-index:1; padding: 4rem 1.5rem; background: var(--bg); }
+    .section-title { font-size:clamp(1.4rem,3vw,2rem); font-weight:700; text-align:center; margin-bottom:.75rem; }
+    .section-sub { text-align:center; color: var(--muted); max-width:560px; margin:0 auto 3rem; font-size:.95rem; }
+    .skills-grid { max-width:1100px; margin:0 auto; display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:1.5rem; }
+    .skill-card {
+      background: var(--card); border-radius: var(--radius);
+      border: 1px solid rgba(5,150,105,0.1);
+      padding:2rem; display:flex; flex-direction:column; gap:.75rem;
+      transition: transform .3s, box-shadow .3s;
+    }
+    .skill-card:hover { transform:translateY(-6px); box-shadow: 0 12px 32px rgba(5,150,105,0.15); }
+    .skill-icon-wrap {
+      width:56px; height:56px; border-radius:14px; display:flex; align-items:center; justify-content:center;
+    }
+    .skill-card h3 { font-size:1.05rem; font-weight:600; }
+    .skill-card p { font-size:.875rem; color: var(--muted); flex:1; }
+    .btn-open {
+      margin-top:.5rem; background: var(--emerald); color:#fff;
+      border:none; border-radius:10px; padding:.6rem 1.25rem;
+      font-size:.875rem; font-weight:600; cursor:pointer;
+      transition: background .2s, transform .15s; width:fit-content;
+      font-family:'DM Sans',sans-serif;
+    }
+    .btn-open:hover { background: var(--emerald-dark); transform:scale(1.02); }
 
-        #myModal:target #modalContent {
-            opacity: 1;
-            transform: scale(1);
-        }
-    </style>
+    /* ── Activity Feed ── */
+    #feed-section { position:relative; z-index:1; padding: 3rem 1.5rem; background: var(--card); }
+    .feed-inner { max-width:700px; margin:0 auto; }
+    .feed-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:1.25rem; }
+    .live-badge {
+      display:flex; align-items:center; gap:6px;
+      background: #fef2f2; color:#dc2626;
+      border-radius:20px; padding:4px 10px; font-size:.75rem; font-weight:600;
+    }
+    .live-dot { width:8px; height:8px; border-radius:50%; background:#dc2626; animation:pulse 1.2s ease-in-out infinite; }
+    @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.5;transform:scale(1.3)} }
+    #activity-list { display:flex; flex-direction:column; gap:.5rem; }
+    .activity-item {
+      display:flex; align-items:center; gap:.75rem;
+      background: var(--bg); border:1px solid rgba(5,150,105,0.09);
+      border-radius:12px; padding:.75rem 1rem;
+      animation: slideIn .4s ease;
+    }
+    @keyframes slideIn { from{opacity:0;transform:translateX(-16px)} to{opacity:1;transform:translateX(0)} }
+    .activity-avatar {
+      width:36px; height:36px; border-radius:50%; flex-shrink:0;
+      display:flex; align-items:center; justify-content:center;
+      font-size:.75rem; font-weight:700; color:#fff;
+    }
+    .activity-text { flex:1; }
+    .activity-text strong { font-size:.875rem; font-weight:600; }
+    .activity-text span { font-size:.8rem; color: var(--muted); }
+    .activity-time { font-size:.72rem; color: var(--muted); white-space:nowrap; }
+
+    /* ── Testimonials ── */
+    #testimonials-section {
+      position:relative; z-index:1;
+      background: linear-gradient(135deg, #064e35 0%, #022c1e 100%);
+      padding: 4rem 1.5rem; color:#fff;
+    }
+    .testi-grid { max-width:1100px; margin:2.5rem auto 0; display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:1.5rem; }
+    .testi-card {
+      background:rgba(255,255,255,0.07); backdrop-filter:blur(8px);
+      border:1px solid rgba(255,255,255,0.12); border-radius: var(--radius); padding:1.5rem;
+      transition: transform .2s;
+    }
+    .testi-card:hover { transform: translateY(-4px); }
+    .testi-avatar { width:44px; height:44px; border-radius:50%; object-fit:cover; flex-shrink:0; }
+    .testi-name { font-weight:600; font-size:.9rem; }
+    .testi-loc { font-size:.78rem; opacity:.65; }
+    .testi-body { font-style:italic; font-size:.875rem; opacity:.9; margin-top:.75rem; line-height:1.6; }
+    .stars { color: var(--gold); font-size:.8rem; margin-top:.75rem; }
+
+    /* ── Modal ── */
+    #modal-overlay {
+      position:fixed; inset:0; background:rgba(0,0,0,0.55);
+      z-index:200; display:none; align-items:center; justify-content:center;
+    }
+    #modal-overlay.open { display:flex; }
+    #modal-box {
+      background:#fff; border-radius: var(--radius); width:100%; max-width:420px; mx-4:4rem;
+      overflow:hidden; transform:scale(.95); opacity:0;
+      transition: transform .3s ease, opacity .3s ease;
+    }
+    #modal-overlay.open #modal-box { transform:scale(1); opacity:1; }
+    .modal-head { background: var(--emerald); padding:1rem 1.5rem; }
+    .modal-head h2 { color:#fff; font-size:1.05rem; font-weight:700; }
+    .modal-body { padding:1.25rem 1.5rem; color:#374151; font-size:.9rem; }
+    .modal-form { padding:1rem 1.5rem 1.5rem; border-top:1px solid #f3f4f6; }
+    .modal-input {
+      width:100%; border:1px solid #d1d5db; border-radius:10px;
+      padding:.6rem 1rem; font-size:.9rem; outline:none; margin-top:.4rem;
+      font-family:'DM Sans',sans-serif;
+      transition: border-color .2s;
+    }
+    .modal-input:focus { border-color: var(--emerald); box-shadow: 0 0 0 3px rgba(5,150,105,0.12); }
+    .modal-actions { display:flex; justify-content:flex-end; gap:.75rem; margin-top:1rem; }
+    .btn-cancel { background:#f3f4f6; border:none; border-radius:9px; padding:.6rem 1.1rem; cursor:pointer; font-size:.875rem; font-family:'DM Sans',sans-serif; }
+    .btn-activate { background: var(--emerald); color:#fff; border:none; border-radius:9px; padding:.6rem 1.25rem; cursor:pointer; font-size:.875rem; font-weight:600; font-family:'DM Sans',sans-serif; transition:background .2s; }
+    .btn-activate:hover { background: var(--emerald-dark); }
+
+    /* ── Footer ── */
+    #footer { position:relative; z-index:1; text-align:center; padding:1.5rem; font-size:.8rem; color: var(--muted); background: var(--bg); border-top:1px solid rgba(5,150,105,0.1); }
+
+    /* ── Responsive tweaks ── */
+    @media(max-width:640px){
+      .stats-grid { grid-template-columns: repeat(2,1fr); }
+      .carousel-btn { display:none; }
+    }
+  </style>
 </head>
+<body>
 
-<body class="bg-gray-50">
-    <script>
-        if (!localStorage.getItem('currentUser')) {
-            document.body.innerHTML = `
-                <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-                    <div class="w-full max-w-md mx-4">
-                        <div class="bg-white rounded-lg shadow-xl overflow-hidden">
-                            <div class="bg-emerald-600 py-4 px-6">
-                                <h2 class="text-white text-xl font-bold text-center">Online Tasks</h2>
-                            </div>
-                            <div class="p-6 text-center">
-                                <p class="text-gray-700 mb-6">Please log in first to access the dashboard.</p>
-                                <button onclick="window.location.href='login.html'"
-                                        class="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-2 px-6 rounded-lg transition">
-                                    OK
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            `;
-        } else {
-            // Inject full dashboard HTML
-            document.body.innerHTML = `
-                <!-- Skills Section -->
-                <section id="skills" class="py-20">
-                    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                        <div class="text-center mb-16" data-aos="fade-up">
-                            <h2 class="text-3xl font-bold text-gray-800 mb-4">
-                                Earn Money Online by Completing Simple Surveys & Tasks
-                            </h2>
-                            <p class="text-lg text-gray-600 max-w-2xl mx-auto">
-                                Turn your free time into extra income. Join thousands of people earning from home — all you need is
-                                your phone or laptop.
-                            </p>
-                        </div>
+<!-- ════════════════════════════════════════
+     FLOATING BACKGROUND PARTICLES
+════════════════════════════════════════ -->
+<div id="particles-bg" aria-hidden="true"></div>
 
-                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                            <!-- Skill Card 1 -->
-                            <div class="skill-card bg-white p-8 rounded-lg shadow-md" data-aos="fade-up" data-aos-delay="100">
-                                <div class="w-16 h-16 bg-indigo-100 rounded-full flex items-center justify-center mb-6">
-                                    <i data-feather="bar-chart-2" class="text-indigo-600 w-8 h-8"></i>
-                                </div>
-                                <h3 class="text-xl font-bold mb-3">Online Surveys & Market Research</h3>
-                                <p class="text-gray-600">
-                                    Get paid to share your opinions on products, brands, or services. Companies use your feedback to
-                                    improve their offerings.
-                                </p>
-                                <a href="#myModal"
-                                    class="bg-emerald-600 hover:bg-green-700 text-white font-semibold px-5 py-2 rounded-lg shadow-md transition duration-200 mt-6 inline-block">
-                                    Open Tasks
-                                </a>
-                            </div>
+<!-- ════════════════════════════════════════
+     NAVBAR
+════════════════════════════════════════ -->
+<nav id="navbar">
+  <div class="nav-logo">
+    <i class="fas fa-bolt" style="font-size:.9rem;margin-right:6px;"></i>OnlineTasks
+  </div>
+  <div class="nav-greeting" id="nav-greeting">Welcome 👋</div>
+  <button id="mute-btn" title="Toggle sound">
+    <i class="fas fa-volume-up" id="mute-icon" style="font-size:13px;"></i>
+  </button>
+</nav>
 
-                            <!-- Skill Card 2 -->
-                            <div class="skill-card bg-white p-8 rounded-lg shadow-md" data-aos="fade-up" data-aos-delay="200">
-                                <div class="w-16 h-16 bg-pink-100 rounded-full flex items-center justify-center mb-6">
-                                    <i data-feather="layout" class="text-pink-600 w-8 h-8"></i>
-                                </div>
-                                <h3 class="text-xl font-bold mb-3">Freelance Writing & Copywriting</h3>
-                                <p class="text-gray-600">
-                                    Create blog posts, articles, website content, or marketing copy for selected clients, companies
-                                    and organizations.
-                                </p>
-                                <a href="#myModal"
-                                    class="bg-emerald-600 hover:bg-green-700 text-white font-semibold px-5 py-2 rounded-lg shadow-md transition duration-200 mt-6 inline-block">
-                                    Open Tasks
-                                </a>
-                            </div>
+<!-- ════════════════════════════════════════
+     CAROUSEL
+════════════════════════════════════════ -->
+<section id="carousel-section">
+  <div class="carousel-wrapper" id="carousel">
+    <!-- Slide 1 -->
+    <div class="carousel-slide active">
+      <img loading="lazy" src="https://images.unsplash.com/photo-1499750310107-5fef28a66643?w=1920&q=80" alt="Work from anywhere"/>
+      <div class="slide-overlay">
+        <div class="slide-title">Work from Anywhere</div>
+        <div class="slide-sub">Complete tasks on your phone or laptop and earn weekly payouts to your M-PESA.</div>
+      </div>
+    </div>
+    <!-- Slide 2 -->
+    <div class="carousel-slide">
+      <img loading="lazy" src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=1920&q=80" alt="Team working"/>
+      <div class="slide-overlay">
+        <div class="slide-title">Join 10,000+ Earners</div>
+        <div class="slide-sub">Thousands of members across East Africa are already earning daily from simple online tasks.</div>
+      </div>
+    </div>
+    <!-- Slide 3 -->
+    <div class="carousel-slide">
+      <img loading="lazy" src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=1920&q=80" alt="Data tasks"/>
+      <div class="slide-overlay">
+        <div class="slide-title">Get Paid for Your Opinions</div>
+        <div class="slide-sub">Survey brands, rate products, and share insights — it's that simple.</div>
+      </div>
+    </div>
+    <!-- Slide 4 -->
+    <div class="carousel-slide">
+      <img loading="lazy" src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=1920&q=80" alt="Analytics"/>
+      <div class="slide-overlay">
+        <div class="slide-title">Transparent Earnings Dashboard</div>
+        <div class="slide-sub">Track every task, every payment, every milestone — all in one place.</div>
+      </div>
+    </div>
+    <!-- Slide 5 -->
+    <div class="carousel-slide">
+      <img loading="lazy" src="https://images.unsplash.com/photo-1553729459-efe14ef6055d?w=1920&q=80" alt="Mobile money"/>
+      <div class="slide-overlay">
+        <div class="slide-title">Instant M-PESA Payouts</div>
+        <div class="slide-sub">Your earnings land directly in your M-PESA wallet — fast, secure, and reliable.</div>
+      </div>
+    </div>
 
-                            <!-- Skill Card 3 -->
-                            <div class="skill-card bg-white p-8 rounded-lg shadow-md" data-aos="fade-up" data-aos-delay="300">
-                                <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mb-6">
-                                    <i data-feather="code" class="text-blue-600 w-8 h-8"></i>
-                                </div>
-                                <h3 class="text-xl font-bold mb-3">Graphic Design</h3>
-                                <p class="text-gray-600">
-                                    Create logos, posters, social media graphics, and branding materials for individuals
-                                    and businesses.
-                                </p>
-                                <a href="#myModal"
-                                    class="bg-emerald-600 hover:bg-green-700 text-white font-semibold px-5 py-2 rounded-lg shadow-md transition duration-200 mt-6 inline-block">
-                                    Open Tasks
-                                </a>
-                            </div>
+    <!-- Controls -->
+    <button class="carousel-btn" id="carousel-prev" aria-label="Previous">&#8249;</button>
+    <button class="carousel-btn" id="carousel-next" aria-label="Next">&#8250;</button>
+    <div class="carousel-dots" id="carousel-dots"></div>
+  </div>
+</section>
 
-                            <!-- Skill Card 4 -->
-                            <div class="skill-card bg-white p-8 rounded-lg shadow-md" data-aos="fade-up" data-aos-delay="100">
-                                <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mb-6">
-                                    <i data-feather="film" class="text-green-600 w-8 h-8"></i>
-                                </div>
-                                <h3 class="text-xl font-bold mb-3">Transcription</h3>
-                                <p class="text-gray-600">
-                                    Listen to audio or video recordings and convert them into written text. Ideal if
-                                    you have good listening and typing skills
-                                </p>
-                                <a href="#myModal"
-                                    class="bg-emerald-600 hover:bg-green-700 text-white font-semibold px-5 py-2 rounded-lg shadow-md transition duration-200 mt-6 inline-block">
-                                    Open Tasks
-                                </a>
-                            </div>
+<!-- ════════════════════════════════════════
+     PERSONALIZED GREETING BANNER
+════════════════════════════════════════ -->
+<div id="greeting-banner">
+  <h1 id="greeting-text">Welcome back! 👋</h1>
+  <p>Your dashboard is live — tasks and earnings await you today.</p>
+</div>
 
-                            <!-- Skill Card 5 -->
-                            <div class="skill-card bg-white p-8 rounded-lg shadow-md" data-aos="fade-up" data-aos-delay="200">
-                                <div class="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mb-6">
-                                    <i data-feather="trending-up" class="text-purple-600 w-8 h-8"></i>
-                                </div>
-                                <h3 class="text-xl font-bold mb-3">Data Entry & Microtasks</h3>
-                                <p class="text-gray-600">
-                                    Complete small digital tasks like labeling images, sorting data, or categorizing content for AI
-                                    training or research.
-                                </p>
-                                <a href="#myModal"
-                                    class="bg-emerald-600 hover:bg-green-700 text-white font-semibold px-5 py-2 rounded-lg shadow-md transition duration-200 mt-6 inline-block">
-                                    Open Tasks
-                                </a>
-                            </div>
+<!-- ════════════════════════════════════════
+     LIVE STATISTICS COUNTERS
+════════════════════════════════════════ -->
+<section id="stats-section" data-aos="fade-up">
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-icon">👥</div>
+      <div class="stat-num" id="stat-users">0</div>
+      <div class="stat-label">Total Users</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon">🟢</div>
+      <div class="stat-num" id="stat-active">0</div>
+      <div class="stat-label">Active Right Now</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon">🔗</div>
+      <div class="stat-num" id="stat-links">0</div>
+      <div class="stat-label">Live Task Links</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon">📬</div>
+      <div class="stat-num" id="stat-tasks">0</div>
+      <div class="stat-label">Incoming Tasks / Day</div>
+    </div>
+    <div class="stat-card countdown">
+      <div class="stat-icon">⏳</div>
+      <div class="stat-num" id="stat-countdown">00:00:00</div>
+      <div class="stat-label">Next Payout In</div>
+    </div>
+  </div>
+</section>
 
-                            <!-- Skill Card 6 -->
-                            <div class="skill-card bg-white p-8 rounded-lg shadow-md" data-aos="fade-up" data-aos-delay="300">
-                                <div class="w-16 h-16 bg-yellow-100 rounded-full flex items-center justify-center mb-6">
-                                    <i data-feather="users" class="text-yellow-600 w-8 h-8"></i>
-                                </div>
-                                <h3 class="text-xl font-bold mb-3">Social Media Management</h3>
-                                <p class="text-gray-600">
-                                    Manage and grow social media accounts for businesses, influencers, or brands by creating content
-                                    and engaging with followers
-                                </p>
-                                <a href="#myModal"
-                                    class="bg-emerald-600 hover:bg-green-700 text-white font-semibold px-5 py-2 rounded-lg shadow-md transition duration-200 mt-6 inline-block">
-                                    Open Tasks
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </section>
+<!-- ════════════════════════════════════════
+     SKILL CARDS
+════════════════════════════════════════ -->
+<section id="skills-section">
+  <div data-aos="fade-up">
+    <h2 class="section-title">Earn Money Online</h2>
+    <p class="section-sub">Turn your free time into extra income. All you need is a phone or laptop — pick your skill and start today.</p>
+  </div>
+  <div class="skills-grid">
+    <div class="skill-card" data-aos="fade-up" data-aos-delay="100">
+      <div class="skill-icon-wrap" style="background:#eef2ff;"><i data-feather="bar-chart-2" style="color:#6366f1;width:26px;height:26px;"></i></div>
+      <h3>Online Surveys & Market Research</h3>
+      <p>Get paid to share your opinions on products, brands, or services. Companies use your feedback to improve their offerings.</p>
+      <button class="btn-open" onclick="openModal()">Open Tasks</button>
+    </div>
+    <div class="skill-card" data-aos="fade-up" data-aos-delay="150">
+      <div class="skill-icon-wrap" style="background:#fdf2f8;"><i data-feather="edit-3" style="color:#ec4899;width:26px;height:26px;"></i></div>
+      <h3>Freelance Writing & Copywriting</h3>
+      <p>Create blog posts, articles, website content, or marketing copy for selected clients, companies and organizations.</p>
+      <button class="btn-open" onclick="openModal()">Open Tasks</button>
+    </div>
+    <div class="skill-card" data-aos="fade-up" data-aos-delay="200">
+      <div class="skill-icon-wrap" style="background:#eff6ff;"><i data-feather="pen-tool" style="color:#3b82f6;width:26px;height:26px;"></i></div>
+      <h3>Graphic Design</h3>
+      <p>Create logos, posters, social media graphics, and branding materials for individuals and businesses.</p>
+      <button class="btn-open" onclick="openModal()">Open Tasks</button>
+    </div>
+    <div class="skill-card" data-aos="fade-up" data-aos-delay="100">
+      <div class="skill-icon-wrap" style="background:#f0fdf4;"><i data-feather="headphones" style="color:#22c55e;width:26px;height:26px;"></i></div>
+      <h3>Transcription</h3>
+      <p>Listen to audio or video recordings and convert them into written text. Ideal if you have good listening and typing skills.</p>
+      <button class="btn-open" onclick="openModal()">Open Tasks</button>
+    </div>
+    <div class="skill-card" data-aos="fade-up" data-aos-delay="150">
+      <div class="skill-icon-wrap" style="background:#faf5ff;"><i data-feather="database" style="color:#a855f7;width:26px;height:26px;"></i></div>
+      <h3>Data Entry & Microtasks</h3>
+      <p>Complete small digital tasks like labeling images, sorting data, or categorizing content for AI training or research.</p>
+      <button class="btn-open" onclick="openModal()">Open Tasks</button>
+    </div>
+    <div class="skill-card" data-aos="fade-up" data-aos-delay="200">
+      <div class="skill-icon-wrap" style="background:#fffbeb;"><i data-feather="share-2" style="color:#f59e0b;width:26px;height:26px;"></i></div>
+      <h3>Social Media Management</h3>
+      <p>Manage and grow social media accounts for businesses, influencers, or brands by creating content and engaging with followers.</p>
+      <button class="btn-open" onclick="openModal()">Open Tasks</button>
+    </div>
+  </div>
+</section>
 
-                <!-- Modal -->
-                <div id="myModal" class="fixed inset-0 hidden bg-black bg-opacity-50 z-50 items-center justify-center">
-                    <div class="bg-white rounded-lg shadow-lg w-full max-w-md mx-4 relative transform transition-all scale-95 opacity-0 duration-300"
-                        id="modalContent">
-                        <div class="flex justify-between items-center border-b px-6 py-4">
-                            <h2 class="text-lg font-bold text-gray-800">Greatness awaits!</h2>
-                            <a href="#" class="text-gray-400 hover:text-gray-700 text-2xl leading-none">&times;</a>
-                        </div>
-                        <div class="px-6 py-4 text-gray-700">
-                            <p>Activate your premium account with only 599 and start earning</p>
-                        </div>
-                        <div class="border-t px-6 py-6">
-                            <form id="payForm" class="space-y-4">
-                                <div>
-                                    <label for="phone" class="block text-gray-700 font-medium mb-2">Enter MPESA Phone Number</label>
-                                    <input type="tel" id="phone" name="phone" placeholder="e.g. 254712345678"
-                                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:outline-none"
-                                        required>
-                                </div>
-                                <div class="flex justify-end space-x-3 pt-2">
-                                    <a href="#"
-                                        class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-medium px-4 py-2 rounded-lg transition">
-                                        Cancel
-                                    </a>
-                                    <button type="submit"
-                                        class="bg-emerald-600 hover:bg-green-700 text-white font-semibold px-4 py-2 rounded-lg transition">
-                                        Activate Now
-                                    </button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
+<!-- ════════════════════════════════════════
+     LIVE ACTIVITY FEED
+════════════════════════════════════════ -->
+<section id="feed-section" data-aos="fade-up">
+  <div class="feed-inner">
+    <div class="feed-header">
+      <h2 style="font-size:1.15rem;font-weight:700;">Live Activity</h2>
+      <div class="live-badge"><div class="live-dot"></div>LIVE</div>
+    </div>
+    <div id="activity-list"></div>
+  </div>
+</section>
 
-                <!-- Testimonials -->
-                <section class="py-20 bg-emerald-600 text-white">
-                    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                        <div class="text-center mb-16" data-aos="fade-up">
-                            <h2 class="text-3xl font-bold mb-4">Client Testimonials</h2>
-                            <p class="text-lg opacity-90 max-w-2xl mx-auto">What satisfied users say about the platform</p>
-                        </div>
+<!-- ════════════════════════════════════════
+     TESTIMONIALS
+════════════════════════════════════════ -->
+<section id="testimonials-section" data-aos="fade-up">
+  <h2 style="text-align:center;font-size:clamp(1.4rem,3vw,2rem);font-weight:700;">What Our Members Say</h2>
+  <p style="text-align:center;opacity:.75;margin-top:.5rem;font-size:.9rem;">Real stories from real earners across East Africa.</p>
+  <div class="testi-grid">
+    <div class="testi-card" data-aos="fade-up" data-aos-delay="100">
+      <div style="display:flex;align-items:center;gap:.75rem;</div>">
+        <img class="testi-avatar" loading="lazy" src="https://i.pinimg.com/736x/5a/dd/7d/5add7ddb97e3e7b29f8afbd568eb560f.jpg" alt="Maurine"/>
+        <div><div class="testi-name">Maurine Nzegu</div><div class="testi-loc">Kampala, Uganda</div></div>
+      </div>
+      <div class="testi-body">"I never thought I could earn money online until I joined. Now I use my phone to complete surveys and get paid weekly!"</div>
+      <div class="stars">★★★★★</div>
+    </div>
+    <div class="testi-card" data-aos="fade-up" data-aos-delay="200">
+      <div style="display:flex;align-items:center;gap:.75rem;">
+        <img class="testi-avatar" loading="lazy" src="https://i.pinimg.com/1200x/44/19/be/4419be5d4bb3c17e305c8b61e9548f74.jpg" alt="Anthony"/>
+        <div><div class="testi-name">Anthony Machacha</div><div class="testi-loc">Kisumu, Kenya</div></div>
+      </div>
+      <div class="testi-body">"The tasks are easy to complete, and payments are always on time. A great way to make extra income from home."</div>
+      <div class="stars">★★★★★</div>
+    </div>
+    <div class="testi-card" data-aos="fade-up" data-aos-delay="300">
+      <div style="display:flex;align-items:center;gap:.75rem;">
+        <img class="testi-avatar" loading="lazy" src="https://i.pinimg.com/1200x/81/80/9c/81809c6cfd50377b86695315a2815b0b.jpg" alt="Grace"/>
+        <div><div class="testi-name">Grace Makena</div><div class="testi-loc">Mombasa, Kenya</div></div>
+      </div>
+      <div class="testi-body">"Started during my free time and now I earn enough to cover my monthly bills. Simple, reliable, and highly recommended!"</div>
+      <div class="stars">★★★★★</div>
+    </div>
+  </div>
+</section>
 
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                            <!-- Testimonial 1 -->
-                            <div class="bg-white bg-opacity-10 p-8 rounded-lg backdrop-filter backdrop-blur-sm" data-aos="fade-up"
-                                data-aos-delay="100">
-                                <div class="flex items-center mb-6">
-                                    <div class="w-12 h-12 rounded-full overflow-hidden mr-4">
-                                        <img src="https://static.photos/finance/200x200/118.webp" alt="Client"
-                                            class="w-full h-full object-cover">
-                                    </div>
-                                    <div>
-                                        <h4 class="font-bold">Maurine Nzegu</h4>
-                                        <p class="text-sm opacity-80">Kampala, Uganda.</p>
-                                    </div>
-                                </div>
-                                <p class="italic">"I never thought I could earn money online until I joined. Now I use my phone to
-                                    complete surveys and tasks and get paid weekly!"</p>
-                                <div class="flex mt-4">
-                                    <i data-feather="star" class="w-4 h-4 text-yellow-300 fill-current"></i>
-                                    <i data-feather="star" class="w-4 h-4 text-yellow-300 fill-current"></i>
-                                    <i data-feather="star" class="w-4 h-4 text-yellow-300 fill-current"></i>
-                                    <i data-feather="star" class="w-4 h-4 text-yellow-300 fill-current"></i>
-                                    <i data-feather="star" class="w-4 h-4 text-yellow-300 fill-current"></i>
-                                </div>
-                            </div>
+<!-- ════════════════════════════════════════
+     MODAL
+════════════════════════════════════════ -->
+<div id="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+  <div id="modal-box" style="margin:1rem;">
+    <div class="modal-head"><h2 id="modal-title">Unlock Full Access 🚀</h2></div>
+    <div class="modal-body">Activate your premium account for only <strong>KES 599</strong> and start earning from all tasks immediately.</div>
+    <div class="modal-form">
+      <form id="payForm">
+        <label for="phone" style="font-size:.875rem;font-weight:500;color:#374151;">M-PESA Phone Number</label>
+        <input type="tel" id="phone" name="phone" class="modal-input" placeholder="e.g. 254712345678" required/>
+        <div class="modal-actions">
+          <button type="button" class="btn-cancel" onclick="closeModal()">Cancel</button>
+          <button type="submit" class="btn-activate" id="submitBtn">Activate Now</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
 
-                            <!-- Testimonial 2 -->
-                            <div class="bg-white bg-opacity-10 p-8 rounded-lg backdrop-filter backdrop-blur-sm" data-aos="fade-up"
-                                data-aos-delay="200">
-                                <div class="flex items-center mb-6">
-                                    <div class="w-12 h-12 rounded-full overflow-hidden mr-4">
-                                        <img src="https://static.photos/office/200x200/140.webp" alt="Client"
-                                            class="w-full h-full object-cover">
-                                    </div>
-                                    <div>
-                                        <h4 class="font-bold">Anthony Machacha</h4>
-                                        <p class="text-sm opacity-80">Kisumu, Kenya</p>
-                                    </div>
-                                </div>
-                                <p class="italic">"The tasks are easy to complete, and payments are always on time. A great way to
-                                    make extra income from home."</p>
-                                <div class="flex mt-4">
-                                    <i data-feather="star" class="w-4 h-4 text-yellow-300 fill-current"></i>
-                                    <i data-feather="star" class="w-4 h-4 text-yellow-300 fill-current"></i>
-                                    <i data-feather="star" class="w-4 h-4 text-yellow-300 fill-current"></i>
-                                    <i data-feather="star" class="w-4 h-4 text-yellow-300 fill-current"></i>
-                                    <i data-feather="star" class="w-4 h-4 text-yellow-300 fill-current"></i>
-                                </div>
-                            </div>
+<footer id="footer">© 2025 OnlineTasks. All rights reserved.</footer>
 
-                            <!-- Testimonial 3 -->
-                            <div class="bg-white bg-opacity-10 p-8 rounded-lg backdrop-filter backdrop-blur-sm" data-aos="fade-up"
-                                data-aos-delay="300">
-                                <div class="flex items-center mb-6">
-                                    <div class="w-12 h-12 rounded-full overflow-hidden mr-4">
-                                        <img src="https://static.photos/office/200x200/228.webp" alt="Client"
-                                            class="w-full h-full object-cover">
-                                    </div>
-                                    <div>
-                                        <h4 class="font-bold">Grace Makena</h4>
-                                        <p class="text-sm opacity-80">Mombasa, Kenya</p>
-                                    </div>
-                                </div>
-                                <p class="italic">"I started doing online surveys during my free time, and now I earn enough to
-                                    cover my monthly bills. It’s simple and reliable!. Highly recommend!"</p>
-                                <div class="flex mt-4">
-                                    <i data-feather="star" class="w-4 h-4 text-yellow-300 fill-current"></i>
-                                    <i data-feather="star" class="w-4 h-4 text-yellow-300 fill-current"></i>
-                                    <i data-feather="star" class="w-4 h-4 text-yellow-300 fill-current"></i>
-                                    <i data-feather="star" class="w-4 h-4 text-yellow-300 fill-current"></i>
-                                    <i data-feather="star" class="w-4 h-4 text-yellow-300 fill-current"></i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </section>
+<!-- ════════════════════════════════════════
+     SCRIPTS
+════════════════════════════════════════ -->
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<script>
+/* ─────────────────────────────────────────
+   AUTH GUARD
+───────────────────────────────────────── */
+(function(){
+  if (!localStorage.getItem('currentUser')) {
+    document.body.innerHTML = `
+      <div style="position:fixed;inset:0;background:rgba(0,0,0,0.5);display:flex;align-items:center;justify-content:center;z-index:9999;">
+        <div style="background:#fff;border-radius:16px;overflow:hidden;max-width:380px;width:90%;text-align:center;">
+          <div style="background:#059669;padding:1.25rem;">
+            <h2 style="color:#fff;font-family:Sora,sans-serif;font-size:1.1rem;">Online Tasks</h2>
+          </div>
+          <div style="padding:2rem;">
+            <p style="color:#374151;margin-bottom:1.5rem;">Please log in first to access the dashboard.</p>
+            <button onclick="window.location.href='login.html'" style="background:#059669;color:#fff;border:none;border-radius:10px;padding:.7rem 1.5rem;font-size:.9rem;cursor:pointer;font-family:DM Sans,sans-serif;font-weight:600;">Go to Login</button>
+          </div>
+        </div>
+      </div>`;
+  }
+})();
 
-                <!-- Scripts Placeholder -->
-                <!-- Scripts will be initialized below -->
+/* ─────────────────────────────────────────
+   AOS + FEATHER INIT
+───────────────────────────────────────── */
+document.addEventListener('DOMContentLoaded', () => {
+  AOS.init({ duration: 800, once: true, offset: 60 });
+  feather.replace();
+
+  initGreeting();
+  initParticles();
+  initCarousel();
+  initCounters();
+  initCountdown();
+  initActivityFeed();
+  initSound();
+});
+
+/* ─────────────────────────────────────────
+   PERSONALIZED GREETING
+───────────────────────────────────────── */
+function initGreeting() {
+  let user = null;
+  try { user = JSON.parse(localStorage.getItem('currentUser')); } catch(e){}
+  const name = (user && (user.name || user.username || user.email)) ? (user.name || user.username || user.email.split('@')[0]) : null;
+  const hour = new Date().getHours();
+  const greet = hour < 12 ? 'Good morning' : hour < 17 ? 'Good afternoon' : 'Good evening';
+  const display = name ? `${greet}, ${name}! 👋` : `${greet}! 👋`;
+  document.getElementById('greeting-text').textContent = display;
+  document.getElementById('nav-greeting').innerHTML = name
+    ? `Welcome, <span>${name}</span>`
+    : `Welcome back 👋`;
+}
+
+/* ─────────────────────────────────────────
+   FLOATING PARTICLES
+───────────────────────────────────────── */
+function initParticles() {
+  const container = document.getElementById('particles-bg');
+  const icons = ['✓','$','✉','📊','🖊','💼','📋','⚡','💡','🔗'];
+  const count = window.innerWidth < 640 ? 8 : 18;
+
+  for (let i = 0; i < count; i++) {
+    const el = document.createElement('div');
+    el.className = 'particle';
+    const size = 28 + Math.random() * 32;
+    const left = Math.random() * 100;
+    const delay = Math.random() * 14;
+    const dur = 10 + Math.random() * 12;
+    el.style.cssText = `
+      width:${size}px; height:${size}px;
+      left:${left}%; bottom:-80px;
+      animation-duration:${dur}s;
+      animation-delay:${delay}s;
+      font-size:${size * 0.45}px;
+      display:flex; align-items:center; justify-content:center;
+      color:rgba(5,150,105,0.35);
     `;
+    el.textContent = icons[Math.floor(Math.random() * icons.length)];
+    container.appendChild(el);
+  }
+}
 
-            // Re-initialize AOS & Feather
-            setTimeout(() => {
-                if (typeof AOS !== 'undefined') AOS.init({ duration: 800, once: true });
-                if (typeof feather !== 'undefined') feather.replace();
-            }, 0);
+/* ─────────────────────────────────────────
+   CAROUSEL
+───────────────────────────────────────── */
+function initCarousel() {
+  const slides = document.querySelectorAll('.carousel-slide');
+  const dotsContainer = document.getElementById('carousel-dots');
+  let current = 0, timer, paused = false;
 
-            // STK Push + Polling Logic
-            document.getElementById("payForm")?.addEventListener("submit", async (e) => {
-                e.preventDefault();
-                const phone = document.getElementById("phone").value.trim();
-                const formData = new FormData();
-                formData.append("phone", phone);
+  slides.forEach((_, i) => {
+    const dot = document.createElement('button');
+    dot.className = 'dot' + (i === 0 ? ' active' : '');
+    dot.setAttribute('aria-label', `Slide ${i+1}`);
+    dot.addEventListener('click', () => goTo(i));
+    dotsContainer.appendChild(dot);
+  });
 
-                // FIX: Removed trailing space in URL
-                const backendUrl = "https://solutionsbackend-uv0s.onrender.com/stkpush.php";
+  function goTo(n) {
+    slides[current].classList.remove('active');
+    dotsContainer.children[current].classList.remove('active');
+    current = (n + slides.length) % slides.length;
+    slides[current].classList.add('active');
+    dotsContainer.children[current].classList.add('active');
+  }
 
-                const submitBtn = e.submitter;
-                submitBtn.disabled = true;
-                submitBtn.textContent = "Processing...";
+  function next() { goTo(current + 1); }
+  function startTimer() { timer = setInterval(next, 5000); }
+  function stopTimer() { clearInterval(timer); }
 
-                try {
-                    const response = await fetch(backendUrl, {
-                        method: "POST",
-                        body: formData
-                    });
-                    const text = await response.text();
+  document.getElementById('carousel-prev').addEventListener('click', () => { stopTimer(); goTo(current - 1); startTimer(); });
+  document.getElementById('carousel-next').addEventListener('click', () => { stopTimer(); goTo(current + 1); startTimer(); });
 
-                    let data;
-                    try {
-                        data = JSON.parse(text);
-                    } catch (jsonErr) {
-                        alert("Server error: Invalid response format.");
-                        throw jsonErr;
-                    }
+  const wrapper = document.getElementById('carousel');
+  wrapper.addEventListener('mouseenter', stopTimer);
+  wrapper.addEventListener('mouseleave', startTimer);
 
-                    if (data.error) {
-                        alert("Error: " + data.error);
-                    } else if (data.ResponseCode === "0") {
-                        alert("✅ STK Push sent! Check your phone.");
+  startTimer();
+}
 
-                        // === START POLLING ===
-                        const poll = setInterval(async () => {
-                            try {
-                                const res = await
-                                    fetch(`https://solutionsbackend-uv0s.onrender.com/check-payment.php?phone=${encodeURIComponent(phone)}`);
-                                const result = await res.json();
+/* ─────────────────────────────────────────
+   ANIMATED COUNTERS
+───────────────────────────────────────── */
+function initCounters() {
+  function animateTo(el, target, duration, formatter) {
+    const start = performance.now();
+    function step(now) {
+      const t = Math.min((now - start) / duration, 1);
+      const ease = 1 - Math.pow(1 - t, 3);
+      const val = Math.floor(ease * target);
+      el.textContent = formatter ? formatter(val) : val.toLocaleString();
+      if (t < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  }
 
-                                if (result.status === 'completed') {
-                                    clearInterval(poll);
-                                    window.location.href = 'next-form.html'; // ✅ REDIRECT HERE
-                                } else if (result.status === 'not_found') {
-                                    clearInterval(poll);
-                                    alert('Transaction expired. Please try again.');
-                                }
-                                // Continue polling if status is 'pending'
-                            } catch (pollErr) {
-                                console.error('Polling error:', pollErr);
-                            }
-                        }, 3000); // Check every 3 seconds
+  const obs = new IntersectionObserver((entries) => {
+    entries.forEach(en => {
+      if (en.isIntersecting) {
+        animateTo(document.getElementById('stat-users'), 10000, 2000);
+        animateTo(document.getElementById('stat-links'), 2000, 1800);
+        animateTo(document.getElementById('stat-tasks'), 1800, 1600);
+        animateTo(document.getElementById('stat-active'), 347, 1500);
+        obs.disconnect();
+      }
+    });
+  }, { threshold: 0.3 });
+  obs.observe(document.getElementById('stats-section'));
 
-                    } else if (data.errorCode) {
-                        alert("M-Pesa Error: " + (data.errorMessage || data.errorCode));
-                    } else {
-                        alert("Unexpected response. Please try again.");
-                    }
-                } catch (err) {
-                    console.error("Network error:", err);
-                    alert("Failed to connect to payment server.");
-                } finally {
-                    submitBtn.disabled = false;
-                    submitBtn.textContent = "Activate Now";
-                }
-            });
-        }
-    </script>
+  /* Fluctuate active users */
+  setInterval(() => {
+    const base = 300 + Math.floor(Math.random() * 200);
+    document.getElementById('stat-active').textContent = base.toLocaleString();
+  }, 3500);
+}
+
+/* ─────────────────────────────────────────
+   COUNTDOWN TIMER (next midnight = daily payout)
+───────────────────────────────────────── */
+function initCountdown() {
+  function update() {
+    const now = new Date();
+    const midnight = new Date();
+    midnight.setHours(24, 0, 0, 0);
+    let diff = Math.floor((midnight - now) / 1000);
+    const h = String(Math.floor(diff / 3600)).padStart(2,'0');
+    diff %= 3600;
+    const m = String(Math.floor(diff / 60)).padStart(2,'0');
+    const s = String(diff % 60).padStart(2,'0');
+    document.getElementById('stat-countdown').textContent = `${h}:${m}:${s}`;
+  }
+  update();
+  setInterval(update, 1000);
+}
+
+/* ─────────────────────────────────────────
+   LIVE ACTIVITY FEED
+───────────────────────────────────────── */
+function initActivityFeed() {
+const firstNames = [
+    'James','Amina','Kevin','Fatuma','Brian','Aisha','Daniel','Grace','Mike','Siti',
+    'Tom','Mercy','John','Wanjiku','Alex','David','Mary','Samuel','Esther','Peter',
+    'Janet','Joseph','Cynthia','Paul','Diana','George','Linda','Stephen','Lucy','Collins',
+    'Caroline','Elijah','Ruth','Dennis','Agnes','Victor','Rose','Martin','Sharon','Francis',
+    'Beatrice','Patrick','Eunice','Nicholas','Hannah','Edwin','Naomi','Allan','Brenda','Faith'
+];
+const lasts = [
+    'K.','M.','O.','W.','N.','A.','J.','C.','Otieno','Mwangi','Omondi','Wambui','Njoroge','Abdi','Juma',
+    'Chebet','Mutiso','Ochieng','Wairimu','Ngugi','Ali','Jepkoech','Cheruiyot','Musyoka','Odhiambo',
+    'Kariuki','Mugo','Onyango','Wekesa','Naliaka','Kiptoo','Muthoni','Kipchoge','Muriuki','Kilonzo',
+    'Ouma','Kamau','Barasa','Kiplangat','Munyua','Koech','Muli','Kiprotich','Mbugua','Kariuki','Kibet','Mwende','Karanja','Otieno'
+];
+  const colors = ['#059669','#6366f1','#ec4899','#f59e0b','#3b82f6','#14b8a6','#a855f7'];
+  const events = [
+    n => `${n} just signed up 🎉`,
+    n => `${n} completed a survey task`,
+    n => `${n} submitted a writing task`,
+    n => `${n} withdrew KES ${(100 + Math.floor(Math.random()*900))}`,
+    n => `${n} activated premium account`,
+    n => `${n} earned KES ${(50 + Math.floor(Math.random()*200))}`,
+    n => `${n} completed data labeling`,
+  ];
+
+  const list = document.getElementById('activity-list');
+  const MAX = 10;
+
+  function addEntry() {
+    const fn = firstNames[Math.floor(Math.random()*firstNames.length)];
+    const ln = lasts[Math.floor(Math.random()*lasts.length)];
+    const name = `${fn} ${ln}`;
+    const color = colors[Math.floor(Math.random()*colors.length)];
+    const action = events[Math.floor(Math.random()*events.length)](name);
+    const initials = fn[0] + ln[0];
+
+    const now = new Date();
+    const timeStr = now.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
+
+    const item = document.createElement('div');
+    item.className = 'activity-item';
+    item.innerHTML = `
+      <div class="activity-avatar" style="background:${color};">${initials}</div>
+      <div class="activity-text">
+        <strong>${action}</strong><br>
+        <span>Just now</span>
+      </div>
+      <div class="activity-time">${timeStr}</div>`;
+
+    list.insertBefore(item, list.firstChild);
+    while (list.children.length > MAX) list.removeChild(list.lastChild);
+
+    playBeep();
+  }
+
+  /* Seed with a few entries instantly */
+  for (let i = 0; i < 4; i++) addEntry();
+
+  /* Then stream new ones */
+  function schedule() {
+    const delay = 1200 + Math.random() * 2200;
+    setTimeout(() => { addEntry(); schedule(); }, delay);
+  }
+  schedule();
+}
+
+/* ─────────────────────────────────────────
+   SOUND EFFECT
+───────────────────────────────────────── */
+let soundEnabled = true;
+let audioCtx = null;
+
+function getAudioCtx() {
+  if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  return audioCtx;
+}
+
+function playBeep() {
+  if (!soundEnabled) return;
+  try {
+    const ctx = getAudioCtx();
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.frequency.setValueAtTime(880, ctx.currentTime);
+    osc.frequency.exponentialRampToValueAtTime(660, ctx.currentTime + 0.12);
+    gain.gain.setValueAtTime(0.06, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.18);
+    osc.start(ctx.currentTime);
+    osc.stop(ctx.currentTime + 0.2);
+  } catch(e) {}
+}
+
+function initSound() {
+  const btn = document.getElementById('mute-btn');
+  const icon = document.getElementById('mute-icon');
+  btn.addEventListener('click', () => {
+    soundEnabled = !soundEnabled;
+    icon.className = soundEnabled ? 'fas fa-volume-up' : 'fas fa-volume-mute';
+    btn.title = soundEnabled ? 'Mute sounds' : 'Unmute sounds';
+  });
+}
+
+/* ─────────────────────────────────────────
+   MODAL
+───────────────────────────────────────── */
+function openModal() {
+  document.getElementById('modal-overlay').classList.add('open');
+}
+function closeModal() {
+  document.getElementById('modal-overlay').classList.remove('open');
+}
+document.getElementById('modal-overlay').addEventListener('click', (e) => {
+  if (e.target === document.getElementById('modal-overlay')) closeModal();
+});
+
+/* ─────────────────────────────────────────
+   PAY FORM (STK Push)
+───────────────────────────────────────── */
+document.getElementById('payForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const phone = document.getElementById('phone').value.trim();
+  const btn = document.getElementById('submitBtn');
+  btn.disabled = true; btn.textContent = 'Processing…';
+
+  try {
+    const fd = new FormData();
+    fd.append('phone', phone);
+    const res = await fetch('https://solutionsbackend-uv0s.onrender.com/stkpush.php', { method:'POST', body:fd });
+    const text = await res.text();
+    let data;
+    try { data = JSON.parse(text); } catch { alert('Server error: invalid response.'); return; }
+
+    if (data.error) { alert('Error: ' + data.error); return; }
+    if (data.ResponseCode === '0') {
+      alert('✅ STK Push sent! Check your phone.');
+      const poll = setInterval(async () => {
+        try {
+          const r = await fetch(`https://solutionsbackend-uv0s.onrender.com/check-payment.php?phone=${encodeURIComponent(phone)}`);
+          const result = await r.json();
+          if (result.status === 'completed') { clearInterval(poll); window.location.href = 'next-form.html'; }
+          else if (result.status === 'not_found') { clearInterval(poll); alert('Transaction expired. Please try again.'); }
+        } catch {}
+      }, 3000);
+    } else {
+      alert('M-PESA Error: ' + (data.errorMessage || data.errorCode || 'Please try again.'));
+    }
+  } catch (err) {
+    alert('Failed to connect to payment server.');
+  } finally {
+    btn.disabled = false; btn.textContent = 'Activate Now';
+  }
+});
+</script>
 </body>
-
 </html>
