@@ -4,118 +4,625 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home | Online Tasks & Surveys</title>
+    <title>Start Earning Online | Online Tasks & Surveys</title>
 
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
 
-    <!-- AOS Animation Library -->
-    <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
-    <!-- Custom Styles (optional small tweaks) -->
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Poppins:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'poppins': ['Poppins', 'sans-serif'],
+                        'inter': ['Inter', 'sans-serif'],
+                    },
+                    animation: {
+                        'float': 'float 6s ease-in-out infinite',
+                        'float-delayed': 'float 6s ease-in-out 2s infinite',
+                        'pulse-soft': 'pulseSoft 3s ease-in-out infinite',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0px)' },
+                            '50%': { transform: 'translateY(-20px)' },
+                        },
+                        pulseSoft: {
+                            '0%, 100%': { transform: 'scale(1)', opacity: '0.6' },
+                            '50%': { transform: 'scale(1.1)', opacity: '0.9' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f9fafb;
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc;
+            overflow-x: hidden;
         }
 
-        .progress-label {
-            font-weight: 500;
-            font-size: 1.1rem;
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
         }
 
-        footer {
-            background-color: #1b1b1b;
-            color: #fff;
-            padding: 1rem 0;
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+
+        /* Hero Gradient Background */
+        .hero-bg {
+            background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 40%, #0d6efd 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Floating Elements */
+        .floating-element {
+            position: absolute;
+            opacity: 0.15;
+            pointer-events: none;
+        }
+
+        .coin-1 {
+            top: 20%;
+            left: 10%;
+            animation: float 8s ease-in-out infinite;
+        }
+
+        .coin-2 {
+            top: 60%;
+            right: 8%;
+            animation: float 7s ease-in-out 1s infinite;
+        }
+
+        .coin-3 {
+            bottom: 15%;
+            left: 15%;
+            animation: float 9s ease-in-out 2s infinite;
+        }
+
+        /* Animated Background Particles */
+        .particles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            animation: particleFloat 15s infinite linear;
+        }
+
+        @keyframes particleFloat {
+            0% {
+                transform: translateY(100vh) scale(0);
+                opacity: 0;
+            }
+
+            50% {
+                opacity: 1;
+            }
+
+            100% {
+                transform: translateY(-100vh) scale(1);
+                opacity: 0;
+            }
+        }
+
+        /* Button Hover Effects */
+        .btn-primary-hover {
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary-hover:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(34, 197, 94, 0.3);
+        }
+
+        .btn-secondary-hover {
+            transition: all 0.3s ease;
+        }
+
+        .btn-secondary-hover:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(255, 255, 255, 0.2);
+        }
+
+        /* Step Card Hover */
+        .step-card {
+            transition: all 0.4s ease;
+        }
+
+        .step-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .step-card:hover .step-icon {
+            transform: scale(1.1) rotate(5deg);
+        }
+
+        .step-icon {
+            transition: all 0.4s ease;
+        }
+
+        /* Benefit Card Hover */
+        .benefit-card {
+            transition: all 0.4s ease;
+        }
+
+        .benefit-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08);
+        }
+
+        .benefit-card:hover .benefit-icon {
+            transform: scale(1.1);
+        }
+
+        .benefit-icon {
+            transition: all 0.4s ease;
+        }
+
+        /* Task Item Hover */
+        .task-item {
+            transition: all 0.4s ease;
+        }
+
+        .task-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+        }
+
+        .task-item:hover .task-icon-wrapper {
+            transform: scale(1.1) rotate(5deg);
+        }
+
+        .task-icon-wrapper {
+            transition: all 0.4s ease;
+        }
+
+        /* Progress Bar Animation */
+        .progress-fill {
+            transition: width 1.5s ease-out;
+        }
+
+        /* Fade In Animation Classes */
+        .fade-in-section {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease;
+        }
+
+        .fade-in-section.visible {
+            opacity: 1;
+            transform: translateY(0);
         }
     </style>
 </head>
 
 <body>
+    <!-- Hero Section -->
+    <section id="hero" class="hero-bg min-h-screen flex items-center justify-center relative pt-16 sm:pt-20">
+        <!-- Particles -->
+        <div class="particles" id="particles"></div>
 
-    <div class="container py-5 text-center">
-        <h1 class="fw-bold mb-4 text-warning">Welcome to Online Tasks & Surveys</h1>
-        <h2 class="fw-semibold mb-4">Be your own CEO by redefining your professional path with work from home freedom.
-        </h2>
-        <p class="mb-5">
-            This platform offers flexibility and freedom by allowing individuals to earn income or complete tasks from
-            anywhere with an internet connection. It opens access to global opportunities — from freelance projects and
-            digital marketing to surveys, data entry, and content creation. Whether part-time or full-time, it empowers
-            people
-            to manage their schedules, learn new skills, and grow financially in the digital economy.
-        </p>
-        <div>
-            <a href="login.html" class="btn btn-success btn-lg me-3">LOGIN</a>
-            <a href="register.html" class="btn btn-outline-success btn-lg">REGISTER</a>
+        <!-- Floating Elements -->
+        <div class="floating-element coin-1">
+            <div
+                class="w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-full flex items-center justify-center shadow-lg shadow-yellow-500/20">
+                <i class="fas fa-dollar-sign text-white text-lg sm:text-xl"></i>
+            </div>
         </div>
-    </div>
+        <div class="floating-element coin-2">
+            <div
+                class="w-10 h-10 sm:w-14 sm:h-14 bg-gradient-to-br from-blue-400 to-blue-600 rounded-full flex items-center justify-center shadow-lg shadow-blue-500/20">
+                <i class="fas fa-tasks text-white text-sm sm:text-base"></i>
+            </div>
+        </div>
+        <div class="floating-element coin-3">
+            <div
+                class="w-8 h-8 sm:w-12 sm:h-12 bg-gradient-to-br from-green-400 to-green-600 rounded-full flex items-center justify-center shadow-lg shadow-green-500/20">
+                <i class="fas fa-chart-line text-white text-xs sm:text-sm"></i>
+            </div>
+        </div>
 
-    <!-- About Section -->
-    <section id="about" class="py-5 bg-light">
-        <div class="container">
-            <div data-aos="fade-up" class="bg-white p-5 rounded shadow-sm">
-                <h3 class="text-center text-success fw-bold mb-5">Available Tasks</h3>
+        <!-- Content -->
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-20 relative z-10 text-center">
+            <!-- Badge -->
+            <div
+                class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 text-white/90 text-sm font-medium mb-6 sm:mb-8 mx-auto">
+                <span class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
+                Trusted by 50,000+ users worldwide
+            </div>
 
-                <div class="row g-4">
-                    <!-- Task -->
-                    <div class="col-md-6">
-                        <div class="d-flex justify-content-between mb-1">
-                            <span class="progress-label">Online Surveys & Market Research</span>
-                            <span class="text-success fw-semibold">95%</span>
+            <!-- Headline -->
+            <h1
+                class="font-poppins font-bold text-4xl sm:text-5xl md:text-6xl lg:text-7xl text-white leading-tight mb-4 sm:mb-6">
+                Start Earning <span
+                    class="bg-gradient-to-r from-yellow-400 to-orange-500 bg-clip-text text-transparent">Online</span>
+                in Minutes
+            </h1>
+
+            <!-- Subheading -->
+            <p class="text-white/80 text-base sm:text-lg lg:text-xl max-w-2xl mx-auto leading-relaxed mb-8 sm:mb-10">
+                No experience needed. Just complete simple tasks, take surveys, and get paid fast. Your smartphone is
+                all you need.
+            </p>
+
+            <!-- CTA Buttons -->
+            <div class="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center mb-6 sm:mb-8">
+                <a href="register.html"
+                    class="px-8 py-4 rounded-full bg-gradient-to-r from-green-500 to-emerald-400 text-white font-bold text-base sm:text-lg btn-primary-hover inline-flex items-center justify-center gap-2 group">
+                    Create Account
+                    <i class="fas fa-arrow-right transition-transform group-hover:translate-x-1"></i>
+                </a>
+                <a href="login.html"
+                    class="px-8 py-4 rounded-full bg-white/10 backdrop-blur-sm border border-white/30 text-white font-semibold text-base sm:text-lg btn-secondary-hover inline-flex items-center justify-center gap-2">
+                    <i class="fas fa-sign-in-alt"></i>
+                    Login
+                </a>
+            </div>
+
+            <!-- Trust Indicators -->
+            <div class="flex flex-wrap items-center gap-4 sm:gap-6 justify-center pt-2">
+                <div class="flex items-center gap-2 text-white/70">
+                    <i class="fas fa-shield-alt text-green-400"></i>
+                    <span class="text-sm">Secure Platform</span>
+                </div>
+                <div class="flex items-center gap-2 text-white/70">
+                    <i class="fas fa-bolt text-yellow-400"></i>
+                    <span class="text-sm">Fast Withdrawals</span>
+                </div>
+                <div class="flex items-center gap-2 text-white/70">
+                    <i class="fas fa-mobile-alt text-blue-400"></i>
+                    <span class="text-sm">Works on Mobile</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Trust Bar -->
+    <section class="py-8 bg-white shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-6 sm:gap-8 text-center">
+                <div class="fade-in-section">
+                    <p class="font-poppins font-bold text-2xl sm:text-3xl text-gray-900">50K+</p>
+                    <p class="text-gray-500 text-sm mt-1">Active Users</p>
+                </div>
+                <div class="fade-in-section">
+                    <p class="font-poppins font-bold text-2xl sm:text-3xl text-gray-900">$2.5M+</p>
+                    <p class="text-gray-500 text-sm mt-1">Paid to Users</p>
+                </div>
+                <div class="fade-in-section">
+                    <p class="font-poppins font-bold text-2xl sm:text-3xl text-gray-900">120+</p>
+                    <p class="text-gray-500 text-sm mt-1">Countries</p>
+                </div>
+                <div class="fade-in-section">
+                    <p class="font-poppins font-bold text-2xl sm:text-3xl text-gray-900">4.9/5</p>
+                    <p class="text-gray-500 text-sm mt-1">User Rating</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works -->
+    <section id="how-it-works" class="py-16 sm:py-20 md:py-24 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <!-- Header -->
+            <div class="text-center max-w-2xl mx-auto mb-12 sm:mb-16 fade-in-section">
+                <span
+                    class="inline-block px-4 py-1.5 rounded-full bg-blue-100 text-blue-700 font-semibold text-sm mb-4">Simple
+                    Process</span>
+                <h2 class="font-poppins font-bold text-3xl sm:text-4xl md:text-5xl text-gray-900 mb-4">How It Works</h2>
+                <p class="text-gray-600 text-base sm:text-lg">Get started in minutes and begin earning from anywhere in
+                    the world with just three simple steps.</p>
+            </div>
+
+            <!-- Steps -->
+            <div class="grid md:grid-cols-3 gap-6 sm:gap-8">
+                <!-- Step 1 -->
+                <div class="step-card bg-gray-50 rounded-2xl p-6 sm:p-8 text-center fade-in-section">
+                    <div
+                        class="step-icon w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl flex items-center justify-center mx-auto mb-5 sm:mb-6 shadow-lg shadow-blue-500/20">
+                        <i class="fas fa-user-plus text-white text-xl sm:text-2xl"></i>
+                    </div>
+                    <div
+                        class="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center mx-auto mb-4 text-white font-bold text-sm">
+                        1</div>
+                    <h3 class="font-poppins font-bold text-xl sm:text-2xl text-gray-900 mb-3">Sign Up</h3>
+                    <p class="text-gray-600 leading-relaxed">Create your free account in under 2 minutes. No credit card
+                        required.</p>
+                </div>
+
+                <!-- Step 2 -->
+                <div class="step-card bg-gray-50 rounded-2xl p-6 sm:p-8 text-center fade-in-section">
+                    <div
+                        class="step-icon w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br from-yellow-500 to-orange-500 rounded-2xl flex items-center justify-center mx-auto mb-5 sm:mb-6 shadow-lg shadow-yellow-500/20">
+                        <i class="fas fa-tasks text-white text-xl sm:text-2xl"></i>
+                    </div>
+                    <div
+                        class="w-8 h-8 bg-orange-500 rounded-full flex items-center justify-center mx-auto mb-4 text-white font-bold text-sm">
+                        2</div>
+                    <h3 class="font-poppins font-bold text-xl sm:text-2xl text-gray-900 mb-3">Complete Tasks</h3>
+                    <p class="text-gray-600 leading-relaxed">Choose from hundreds of simple tasks, surveys, and
+                        projects.</p>
+                </div>
+
+                <!-- Step 3 -->
+                <div class="step-card bg-gray-50 rounded-2xl p-6 sm:p-8 text-center fade-in-section">
+                    <div
+                        class="step-icon w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br from-green-500 to-emerald-500 rounded-2xl flex items-center justify-center mx-auto mb-5 sm:mb-6 shadow-lg shadow-green-500/20">
+                        <i class="fas fa-wallet text-white text-xl sm:text-2xl"></i>
+                    </div>
+                    <div
+                        class="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-4 text-white font-bold text-sm">
+                        3</div>
+                    <h3 class="font-poppins font-bold text-xl sm:text-2xl text-gray-900 mb-3">Earn & Withdraw</h3>
+                    <p class="text-gray-600 leading-relaxed">Get paid fast via PayPal, bank transfer, or crypto.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Benefits Section -->
+    <section id="benefits" class="py-16 sm:py-20 md:py-24 bg-gradient-to-b from-gray-50 to-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <!-- Header -->
+            <div class="text-center max-w-2xl mx-auto mb-12 sm:mb-16 fade-in-section">
+                <span
+                    class="inline-block px-4 py-1.5 rounded-full bg-green-100 text-green-700 font-semibold text-sm mb-4">Why
+                    Choose Us</span>
+                <h2 class="font-poppins font-bold text-3xl sm:text-4xl md:text-5xl text-gray-900 mb-4">Benefits of
+                    Joining</h2>
+                <p class="text-gray-600 text-base sm:text-lg">Everything you need to start earning online, all in one
+                    platform.</p>
+            </div>
+
+            <!-- Benefits Grid -->
+            <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+                <!-- Benefit 1 -->
+                <div class="benefit-card bg-white rounded-2xl p-6 sm:p-8 shadow-sm fade-in-section">
+                    <div class="benefit-icon w-14 h-14 bg-blue-100 rounded-xl flex items-center justify-center mb-5">
+                        <i class="fas fa-clock text-blue-600 text-xl"></i>
+                    </div>
+                    <h3 class="font-poppins font-bold text-lg sm:text-xl text-gray-900 mb-2">Quick & Easy Tasks</h3>
+                    <p class="text-gray-600 leading-relaxed">Simple tasks designed for everyone. No special skills or
+                        experience required.</p>
+                </div>
+
+                <!-- Benefit 2 -->
+                <div class="benefit-card bg-white rounded-2xl p-6 sm:p-8 shadow-sm fade-in-section">
+                    <div class="benefit-icon w-14 h-14 bg-green-100 rounded-xl flex items-center justify-center mb-5">
+                        <i class="fas fa-calendar-check text-green-600 text-xl"></i>
+                    </div>
+                    <h3 class="font-poppins font-bold text-lg sm:text-xl text-gray-900 mb-2">Daily Opportunities</h3>
+                    <p class="text-gray-600 leading-relaxed">New tasks and surveys added daily. Always something to earn
+                        from.</p>
+                </div>
+
+                <!-- Benefit 3 -->
+                <div class="benefit-card bg-white rounded-2xl p-6 sm:p-8 shadow-sm fade-in-section">
+                    <div class="benefit-icon w-14 h-14 bg-yellow-100 rounded-xl flex items-center justify-center mb-5">
+                        <i class="fas fa-bolt text-yellow-600 text-xl"></i>
+                    </div>
+                    <h3 class="font-poppins font-bold text-lg sm:text-xl text-gray-900 mb-2">Fast Withdrawals</h3>
+                    <p class="text-gray-600 leading-relaxed">Get paid within 24 hours. No long waiting periods or hidden
+                        fees.</p>
+                </div>
+
+                <!-- Benefit 4 -->
+                <div class="benefit-card bg-white rounded-2xl p-6 sm:p-8 shadow-sm fade-in-section">
+                    <div class="benefit-icon w-14 h-14 bg-purple-100 rounded-xl flex items-center justify-center mb-5">
+                        <i class="fas fa-mobile-alt text-purple-600 text-xl"></i>
+                    </div>
+                    <h3 class="font-poppins font-bold text-lg sm:text-xl text-gray-900 mb-2">Mobile Friendly</h3>
+                    <p class="text-gray-600 leading-relaxed">Work from your smartphone or tablet. Earn on the go,
+                        anytime, anywhere.</p>
+                </div>
+
+                <!-- Benefit 5 -->
+                <div class="benefit-card bg-white rounded-2xl p-6 sm:p-8 shadow-sm fade-in-section">
+                    <div class="benefit-icon w-14 h-14 bg-pink-100 rounded-xl flex items-center justify-center mb-5">
+                        <i class="fas fa-shield-alt text-pink-600 text-xl"></i>
+                    </div>
+                    <h3 class="font-poppins font-bold text-lg sm:text-xl text-gray-900 mb-2">Secure Platform</h3>
+                    <p class="text-gray-600 leading-relaxed">Bank-level encryption protects your data and earnings at
+                        all times.</p>
+                </div>
+
+                <!-- Benefit 6 -->
+                <div class="benefit-card bg-white rounded-2xl p-6 sm:p-8 shadow-sm fade-in-section">
+                    <div class="benefit-icon w-14 h-14 bg-indigo-100 rounded-xl flex items-center justify-center mb-5">
+                        <i class="fas fa-headset text-indigo-600 text-xl"></i>
+                    </div>
+                    <h3 class="font-poppins font-bold text-lg sm:text-xl text-gray-900 mb-2">24/7 Support</h3>
+                    <p class="text-gray-600 leading-relaxed">Our support team is always ready to help you with any
+                        questions or issues.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Available Tasks Section -->
+    <section id="available-tasks" class="py-16 sm:py-20 md:py-24 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <!-- Header -->
+            <div class="text-center max-w-2xl mx-auto mb-12 sm:mb-16 fade-in-section">
+                <span
+                    class="inline-block px-4 py-1.5 rounded-full bg-green-100 text-green-700 font-semibold text-sm mb-4">Explore
+                    Opportunities</span>
+                <h2 class="font-poppins font-bold text-3xl sm:text-4xl md:text-5xl text-green-600 mb-4">Available Tasks
+                </h2>
+                <p class="text-gray-600 text-base sm:text-lg">Browse our most popular task categories with high
+                    completion rates and competitive compensation.</p>
+            </div>
+
+            <!-- Tasks Grid -->
+            <div class="grid md:grid-cols-2 gap-4 sm:gap-6 max-w-4xl mx-auto">
+                <!-- Task 1: Online Surveys & Market Research -->
+                <div class="task-item bg-gray-50 rounded-xl p-5 fade-in-section" data-delay="0">
+                    <div class="flex items-center gap-4">
+                        <div
+                            class="task-icon-wrapper w-12 h-12 bg-gradient-to-br from-green-500 to-emerald-500 rounded-xl flex items-center justify-center flex-shrink-0 shadow-md shadow-green-500/20">
+                            <i class="fas fa-poll text-white text-lg"></i>
                         </div>
-                        <div class="progress">
-                            <div class="progress-bar bg-success" style="width:95%"></div>
+                        <div class="flex-1 min-w-0">
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="font-semibold text-gray-900 text-sm sm:text-base truncate pr-2">Online
+                                    Surveys & Market Research</span>
+                                <span class="text-green-600 font-bold text-sm sm:text-base flex-shrink-0">95%</span>
+                            </div>
+                            <div class="w-full h-2.5 bg-gray-200 rounded-full overflow-hidden">
+                                <div class="progress-fill h-full bg-gradient-to-r from-green-500 to-emerald-400 rounded-full"
+                                    style="width: 0%" data-width="95%"></div>
+                            </div>
                         </div>
                     </div>
+                </div>
 
-                    <div class="col-md-6">
-                        <div class="d-flex justify-content-between mb-1">
-                            <span class="progress-label">Freelance Writing & Copywriting</span>
-                            <span class="text-success fw-semibold">90%</span>
+                <!-- Task 2: Freelance Writing & Copywriting -->
+                <div class="task-item bg-gray-50 rounded-xl p-5 fade-in-section" data-delay="100">
+                    <div class="flex items-center gap-4">
+                        <div
+                            class="task-icon-wrapper w-12 h-12 bg-gradient-to-br from-blue-500 to-indigo-500 rounded-xl flex items-center justify-center flex-shrink-0 shadow-md shadow-blue-500/20">
+                            <i class="fas fa-pen-fancy text-white text-lg"></i>
                         </div>
-                        <div class="progress">
-                            <div class="progress-bar bg-success" style="width:90%"></div>
+                        <div class="flex-1 min-w-0">
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="font-semibold text-gray-900 text-sm sm:text-base truncate pr-2">Freelance
+                                    Writing & Copywriting</span>
+                                <span class="text-green-600 font-bold text-sm sm:text-base flex-shrink-0">90%</span>
+                            </div>
+                            <div class="w-full h-2.5 bg-gray-200 rounded-full overflow-hidden">
+                                <div class="progress-fill h-full bg-gradient-to-r from-blue-500 to-indigo-400 rounded-full"
+                                    style="width: 0%" data-width="90%"></div>
+                            </div>
                         </div>
                     </div>
+                </div>
 
-                    <div class="col-md-6">
-                        <div class="d-flex justify-content-between mb-1">
-                            <span class="progress-label">Data Entry & Microtasks</span>
-                            <span class="text-success fw-semibold">94%</span>
+                <!-- Task 3: Data Entry & Microtasks -->
+                <div class="task-item bg-gray-50 rounded-xl p-5 fade-in-section" data-delay="200">
+                    <div class="flex items-center gap-4">
+                        <div
+                            class="task-icon-wrapper w-12 h-12 bg-gradient-to-br from-yellow-500 to-orange-500 rounded-xl flex items-center justify-center flex-shrink-0 shadow-md shadow-yellow-500/20">
+                            <i class="fas fa-keyboard text-white text-lg"></i>
                         </div>
-                        <div class="progress">
-                            <div class="progress-bar bg-success" style="width:94%"></div>
+                        <div class="flex-1 min-w-0">
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="font-semibold text-gray-900 text-sm sm:text-base truncate pr-2">Data Entry
+                                    & Microtasks</span>
+                                <span class="text-green-600 font-bold text-sm sm:text-base flex-shrink-0">94%</span>
+                            </div>
+                            <div class="w-full h-2.5 bg-gray-200 rounded-full overflow-hidden">
+                                <div class="progress-fill h-full bg-gradient-to-r from-yellow-500 to-orange-400 rounded-full"
+                                    style="width: 0%" data-width="94%"></div>
+                            </div>
                         </div>
                     </div>
+                </div>
 
-                    <div class="col-md-6">
-                        <div class="d-flex justify-content-between mb-1">
-                            <span class="progress-label">Graphic Design</span>
-                            <span class="text-success fw-semibold">92%</span>
+                <!-- Task 4: Graphic Design -->
+                <div class="task-item bg-gray-50 rounded-xl p-5 fade-in-section" data-delay="300">
+                    <div class="flex items-center gap-4">
+                        <div
+                            class="task-icon-wrapper w-12 h-12 bg-gradient-to-br from-pink-500 to-rose-500 rounded-xl flex items-center justify-center flex-shrink-0 shadow-md shadow-pink-500/20">
+                            <i class="fas fa-palette text-white text-lg"></i>
                         </div>
-                        <div class="progress">
-                            <div class="progress-bar bg-success" style="width:92%"></div>
+                        <div class="flex-1 min-w-0">
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="font-semibold text-gray-900 text-sm sm:text-base truncate pr-2">Graphic
+                                    Design</span>
+                                <span class="text-green-600 font-bold text-sm sm:text-base flex-shrink-0">92%</span>
+                            </div>
+                            <div class="w-full h-2.5 bg-gray-200 rounded-full overflow-hidden">
+                                <div class="progress-fill h-full bg-gradient-to-r from-pink-500 to-rose-400 rounded-full"
+                                    style="width: 0%" data-width="92%"></div>
+                            </div>
                         </div>
                     </div>
+                </div>
 
-                    <div class="col-md-6">
-                        <div class="d-flex justify-content-between mb-1">
-                            <span class="progress-label">Transcription</span>
-                            <span class="text-success fw-semibold">91%</span>
+                <!-- Task 5: Transcription -->
+                <div class="task-item bg-gray-50 rounded-xl p-5 fade-in-section" data-delay="400">
+                    <div class="flex items-center gap-4">
+                        <div
+                            class="task-icon-wrapper w-12 h-12 bg-gradient-to-br from-cyan-500 to-teal-500 rounded-xl flex items-center justify-center flex-shrink-0 shadow-md shadow-cyan-500/20">
+                            <i class="fas fa-headphones-alt text-white text-lg"></i>
                         </div>
-                        <div class="progress">
-                            <div class="progress-bar bg-success" style="width:91%"></div>
+                        <div class="flex-1 min-w-0">
+                            <div class="flex justify-between items-center mb-2">
+                                <span
+                                    class="font-semibold text-gray-900 text-sm sm:text-base truncate pr-2">Transcription</span>
+                                <span class="text-green-600 font-bold text-sm sm:text-base flex-shrink-0">91%</span>
+                            </div>
+                            <div class="w-full h-2.5 bg-gray-200 rounded-full overflow-hidden">
+                                <div class="progress-fill h-full bg-gradient-to-r from-cyan-500 to-teal-400 rounded-full"
+                                    style="width: 0%" data-width="91%"></div>
+                            </div>
                         </div>
                     </div>
+                </div>
 
-                    <div class="col-md-6">
-                        <div class="d-flex justify-content-between mb-1">
-                            <span class="progress-label">Social Media Management</span>
-                            <span class="text-success fw-semibold">98%</span>
+                <!-- Task 6: Social Media Management -->
+                <div class="task-item bg-gray-50 rounded-xl p-5 fade-in-section" data-delay="500">
+                    <div class="flex items-center gap-4">
+                        <div
+                            class="task-icon-wrapper w-12 h-12 bg-gradient-to-br from-purple-500 to-violet-500 rounded-xl flex items-center justify-center flex-shrink-0 shadow-md shadow-purple-500/20">
+                            <i class="fas fa-share-alt text-white text-lg"></i>
                         </div>
-                        <div class="progress">
-                            <div class="progress-bar bg-success" style="width:98%"></div>
+                        <div class="flex-1 min-w-0">
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="font-semibold text-gray-900 text-sm sm:text-base truncate pr-2">Social
+                                    Media Management</span>
+                                <span class="text-green-600 font-bold text-sm sm:text-base flex-shrink-0">98%</span>
+                            </div>
+                            <div class="w-full h-2.5 bg-gray-200 rounded-full overflow-hidden">
+                                <div class="progress-fill h-full bg-gradient-to-r from-purple-500 to-violet-400 rounded-full"
+                                    style="width: 0%" data-width="98%"></div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -123,16 +630,197 @@
         </div>
     </section>
 
+    <!-- Urgency & Final CTA -->
+    <section class="py-16 sm:py-20 bg-gradient-to-r from-blue-600 via-blue-700 to-blue-800 relative overflow-hidden">
+        <!-- Background Pattern -->
+        <div class="absolute inset-0 opacity-10">
+            <div class="absolute top-0 left-0 w-64 h-64 bg-white rounded-full -translate-x-1/2 -translate-y-1/2"></div>
+            <div class="absolute bottom-0 right-0 w-96 h-96 bg-white rounded-full translate-x-1/3 translate-y-1/3">
+            </div>
+        </div>
+
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10 fade-in-section">
+            <span
+                class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 text-white/90 font-semibold text-sm mb-6 backdrop-blur-sm border border-white/20">
+                <i class="fas fa-fire text-orange-400"></i>
+                Limited daily slots available
+            </span>
+            <h2 class="font-poppins font-bold text-3xl sm:text-4xl md:text-5xl text-white mb-4 sm:mb-6">Join Today &
+                Start Earning Instantly</h2>
+            <p class="text-white/80 text-base sm:text-lg max-w-2xl mx-auto mb-6 sm:mb-10">Don't miss out on thousands of
+                daily opportunities. Create your account now and join our growing community of successful earners.</p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <a href="register.html"
+                    class="px-8 py-4 rounded-full bg-gradient-to-r from-green-500 to-emerald-400 text-white font-bold text-lg btn-primary-hover inline-flex items-center justify-center gap-2 group">
+                    Create Free Account
+                    <i class="fas fa-arrow-right transition-transform group-hover:translate-x-1"></i>
+                </a>
+                <a href="login.html"
+                    class="px-8 py-4 rounded-full border-2 border-white/40 text-white font-semibold text-lg btn-secondary-hover inline-flex items-center justify-center gap-2">
+                    <i class="fas fa-sign-in-alt"></i>
+                    Login
+                </a>
+            </div>
+        </div>
+    </section>
+
     <!-- Footer -->
-    <footer class="text-center">
-        <p class="mb-0">&copy; 2025 Online Tasks & Surveys. All Rights Reserved.</p>
+    <footer class="bg-gray-900 text-gray-400 py-12 sm:py-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12 mb-12">
+                <!-- Brand -->
+                <div class="sm:col-span-2 lg:col-span-1">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div
+                            class="w-10 h-10 bg-gradient-to-br from-blue-500 to-green-500 rounded-xl flex items-center justify-center">
+                            <i class="fas fa-tasks text-white text-sm"></i>
+                        </div>
+                        <span class="font-poppins font-bold text-xl text-white">TaskFlow</span>
+                    </div>
+                    <p class="text-sm leading-relaxed mb-4">Empowering individuals worldwide with flexible work
+                        opportunities. Start earning online today.</p>
+                </div>
+
+                <!-- Links -->
+                <div>
+                    <h6 class="text-white font-semibold mb-4">Platform</h6>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="#" class="hover:text-white transition-colors">Browse Tasks</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">How It Works</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Pricing</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Success Stories</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h6 class="text-white font-semibold mb-4">Support</h6>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="#" class="hover:text-white transition-colors">Help Center</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Contact Us</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">FAQs</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Community</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h6 class="text-white font-semibold mb-4">Legal</h6>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="#" class="hover:text-white transition-colors">Privacy Policy</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Terms of Service</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Cookie Policy</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Disclaimer</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="border-t border-white/10 pt-8 text-center text-sm">
+                <p>&copy; 2025 TaskFlow — Online Tasks & Surveys. All Rights Reserved.</p>
+            </div>
+        </div>
     </footer>
 
-    <!-- JS (Bootstrap + AOS only) -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+    <!-- Scroll to Top Button -->
+    <button
+        class="fixed bottom-6 right-6 w-12 h-12 bg-blue-600 text-white rounded-full shadow-lg shadow-blue-600/30 flex items-center justify-center hover:bg-blue-700 transition-all opacity-0 translate-y-4 z-50"
+        id="scrollTopBtn" aria-label="Scroll to top">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <!-- JavaScript -->
     <script>
-        AOS.init({ duration: 800, once: true });
+        // ==========================================
+        // Scroll to Top Button
+        // ==========================================
+        const scrollTopBtn = document.getElementById('scrollTopBtn');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 500) {
+                scrollTopBtn.classList.remove('opacity-0', 'translate-y-4');
+                scrollTopBtn.classList.add('opacity-100', 'translate-y-0');
+            } else {
+                scrollTopBtn.classList.add('opacity-0', 'translate-y-4');
+                scrollTopBtn.classList.remove('opacity-100', 'translate-y-0');
+            }
+        });
+
+        scrollTopBtn.addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+        // ==========================================
+        // Intersection Observer for Fade-In Animations & Progress Bars
+        // ==========================================
+        const fadeElements = document.querySelectorAll('.fade-in-section');
+
+        const fadeObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    // Handle progress bars
+                    const progressBar = entry.target.querySelector('.progress-fill');
+                    if (progressBar) {
+                        const targetWidth = progressBar.dataset.width;
+                        setTimeout(() => {
+                            progressBar.style.width = targetWidth;
+                        }, 300);
+                    }
+
+                    // Fade in element
+                    const delay = entry.target.dataset.delay || 0;
+                    setTimeout(() => {
+                        entry.target.classList.add('visible');
+                    }, delay);
+
+                    fadeObserver.unobserve(entry.target);
+                }
+            });
+        }, {
+            threshold: 0.15,
+            rootMargin: '0px 0px -50px 0px'
+        });
+
+        fadeElements.forEach(el => fadeObserver.observe(el));
+
+        // ==========================================
+        // Generate Particles
+        // ==========================================
+        function createParticles() {
+            const container = document.getElementById('particles');
+            const particleCount = window.innerWidth < 768 ? 15 : 30;
+
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('particle');
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDuration = (Math.random() * 15 + 10) + 's';
+                particle.style.animationDelay = Math.random() * 10 + 's';
+                particle.style.width = (Math.random() * 4 + 2) + 'px';
+                particle.style.height = particle.style.width;
+                container.appendChild(particle);
+            }
+        }
+
+        createParticles();
+
+        // ==========================================
+        // Smooth Scroll for Anchor Links
+        // ==========================================
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                const targetId = this.getAttribute('href');
+                if (targetId === '#') return;
+
+                const targetEl = document.querySelector(targetId);
+                if (targetEl) {
+                    e.preventDefault();
+                    const offset = 20;
+                    const targetPos = targetEl.offsetTop - offset;
+
+                    window.scrollTo({
+                        top: targetPos,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
     </script>
 </body>
 
