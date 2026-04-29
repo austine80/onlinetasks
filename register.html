@@ -250,7 +250,7 @@
 
             try {
                 // ── Step 1: Create auth user ──
-                const { data: authData, error: authError } = await supabase.auth.signUp({
+                const { data: authData, error: authError } = await supabaseClient.auth.signUp({
                     email,
                     password,
                     options: {
@@ -276,7 +276,7 @@
                 }
 
                 // ── Step 2: Insert profile row into your users table ──
-                const { error: profileError } = await supabase
+                const { error: profileError } = await supabaseClient
                     .from("Onlinetask Users")          // ← your exact table name
                     .insert([{
                         id: user.id,            // matches auth.users primary key

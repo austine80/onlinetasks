@@ -159,7 +159,7 @@
             setLoading(true);
 
             try {
-                const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+                const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
 
                 if (error) throw error;
 
