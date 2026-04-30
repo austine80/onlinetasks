@@ -116,9 +116,10 @@
             modal.show();
 
             if (redirect) {
-                document.getElementById("customAlert").addEventListener("hidden.bs.modal", () => {
+                setTimeout(() => {
+                    modal.hide();
                     window.location.href = "dashboard.html";
-                }, { once: true });
+                }, 2000);
             }
         }
 
