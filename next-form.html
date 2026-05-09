@@ -6,11 +6,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Account Activated | Online Tasks & Surveys</title>
 
-    <!-- Tailwind CSS (fixed CDN) -->
     <script src="https://cdn.tailwindcss.com"></script>
-
-    <!-- Feather Icons (fixed CDN) -->
     <script src="https://cdn.jsdelivr.net/npm/feather-icons@4.29.0/dist/feather.min.js"></script>
+
+    <!-- Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabaseClient.js"></script>
 
     <style>
         .form-card {
@@ -21,7 +22,6 @@
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
         }
 
-        /* Fade-in animation for success modal */
         .fade-in {
             animation: fadeIn 0.4s ease-out forwards;
             opacity: 0;
@@ -32,18 +32,47 @@
                 opacity: 1;
             }
         }
+
+        /* Page loader */
+        #page-loader {
+            position: fixed;
+            inset: 0;
+            background: #f9fafb;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            transition: opacity 0.3s ease;
+        }
+
+        #page-loader.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .loader-ring {
+            width: 40px;
+            height: 40px;
+            border: 4px solid #d1fae5;
+            border-top-color: #059669;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
     </style>
 </head>
 
 <body class="bg-gray-50">
 
-    <!-- 🔒 Auth Guard -->
-    <script>
-        if (!localStorage.getItem('currentUser')) {
-            alert('Please log in first.');
-            window.location.replace('login.html');
-        }
-    </script>
+    <!-- Page Loader (shown while checking session) -->
+    <div id="page-loader">
+        <div class="loader-ring"></div>
+    </div>
 
     <div class="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
         <div class="form-card max-w-md w-full bg-white rounded-2xl shadow-lg p-8">
@@ -94,9 +123,15 @@
                     </select>
                 </div>
 
-                <button type="submit"
-                    class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-3 rounded-lg transition shadow-md">
-                    Start Earning Now
+                <!-- Error message -->
+                <div id="errorMsg"
+                    class="hidden text-sm text-red-600 bg-red-50 border border-red-200 rounded-lg px-4 py-3"></div>
+
+                <button type="submit" id="submitBtn"
+                    class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-3 rounded-lg transition shadow-md flex items-center justify-center gap-2">
+                    <span id="submitText">Start Earning Now</span>
+                    <div id="submitSpinner" class="loader-ring hidden" style="width:20px;height:20px;border-width:3px;">
+                    </div>
                 </button>
             </form>
 
@@ -108,41 +143,116 @@
         </div>
     </div>
 
-    <!-- Success Modal (Hidden by default) -->
+    <!-- Success Modal -->
     <div id="successModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
         <div class="fade-in bg-white rounded-lg shadow-xl w-full max-w-md mx-4 overflow-hidden">
             <div class="bg-emerald-600 py-4 px-6">
                 <h2 class="text-white text-xl font-bold text-center">Online Tasks</h2>
             </div>
             <div class="p-6 text-center">
-                <p class="text-gray-700">Profile saved! Redirecting...</p>
+                <p class="text-gray-700">Profile saved! Redirecting to your tasks...</p>
             </div>
         </div>
     </div>
 
     <script>
-        // Initialize Feather Icons
         feather.replace();
 
-        // Handle form submission
-        document.getElementById("profileForm").addEventListener("submit", function (e) {
+        // ============ AUTH GUARD ============
+        (async function () {
+            const { data: { session } } = await supabaseClient.auth.getSession();
+
+            // Hide loader
+            document.getElementById('page-loader').classList.add('hidden');
+
+            if (!session) {
+                alert('Please log in first.');
+                window.location.replace('login.html');
+                return;
+            }
+
+            // Pre-fill name if already stored in Supabase user metadata
+            const meta = session.user?.user_metadata || {};
+            const existingName = meta.full_name || meta.name || '';
+            if (existingName) {
+                document.getElementById('fullName').value = existingName;
+            }
+        })();
+
+        // ============ FORM SUBMISSION ============
+        document.getElementById('profileForm').addEventListener('submit', async function (e) {
             e.preventDefault();
 
-            const formData = {
-                fullName: this.fullName.value,
-                country: this.country.value,
-                skill: this.skills.value
-            };
+            const submitBtn = document.getElementById('submitBtn');
+            const submitText = document.getElementById('submitText');
+            const submitSpinner = document.getElementById('submitSpinner');
+            const errorMsg = document.getElementById('errorMsg');
 
-            localStorage.setItem("userProfile", JSON.stringify(formData));
+            // Show loading state
+            submitBtn.disabled = true;
+            submitText.textContent = 'Saving...';
+            submitSpinner.classList.remove('hidden');
+            errorMsg.classList.add('hidden');
 
-            // Show branded success modal
-            document.getElementById('successModal').classList.remove('hidden');
+            try {
+                // Re-confirm session is still valid
+                const { data: { session } } = await supabaseClient.auth.getSession();
 
-            // Redirect after delay
-            setTimeout(() => {
-                window.location.href = "finalpage.html"; // ✅ Matches your actual filename
-            }, 2000);
+                if (!session) {
+                    alert('Session expired. Please log in again.');
+                    window.location.replace('login.html');
+                    return;
+                }
+
+                const userId = session.user.id;
+                const userEmail = session.user.email;
+
+                const fullName = document.getElementById('fullName').value.trim();
+                const country = document.getElementById('country').value;
+                const skill = document.getElementById('skills').value;
+
+                // Save profile to your 'Onlinetask Users' table
+                const { error } = await supabaseClient
+                    .from('Onlinetask Users')
+                    .update({
+                        full_name: fullName,
+                        activated: true,
+                        country: country,
+                        skill: skill
+                    })
+                    .eq('id', userId);
+
+                if (error) {
+                    // If update fails (row may not exist yet), try upsert
+                    const { error: upsertError } = await supabaseClient
+                        .from('Onlinetask Users')
+                        .upsert({
+                            id: userId,
+                            email: userEmail,
+                            full_name: fullName,
+                            activated: true,
+                            country: country,
+                            skill: skill
+                        });
+
+                    if (upsertError) throw upsertError;
+                }
+
+                // Show success modal and redirect
+                document.getElementById('successModal').classList.remove('hidden');
+                setTimeout(() => {
+                    window.location.href = 'finalpage.html';
+                }, 2000);
+
+            } catch (err) {
+                console.error('Profile save error:', err);
+                errorMsg.textContent = 'Failed to save profile: ' + (err.message || 'Please try again.');
+                errorMsg.classList.remove('hidden');
+            } finally {
+                submitBtn.disabled = false;
+                submitText.textContent = 'Start Earning Now';
+                submitSpinner.classList.add('hidden');
+            }
         });
     </script>
 </body>

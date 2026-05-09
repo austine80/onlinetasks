@@ -100,35 +100,40 @@
             overflow: hidden;
         }
     </style>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabaseClient.js"></script>
 </head>
 
 <body class="bg-gradient-to-br from-emerald-50 to-teal-50 min-h-screen">
     <!-- 🔒 Auth & Payment Guard (Runs Immediately) -->
     <script>
-        (function () {
-            const currentUser = localStorage.getItem('currentUser');
-            const paymentStatus = localStorage.getItem('paymentVerified');
-
-            if (!currentUser) {
+        (async function () {
+            const { data: { session } } = await supabaseClient.auth.getSession();
+            if (!session) {
                 Swal.fire({
                     icon: 'warning',
                     title: 'Login Required',
                     text: 'Please log in to access tasks.',
-                    confirmButtonText: 'Go to Login',
                     confirmButtonColor: '#10b981'
                 }).then(() => window.location.replace('login.html'));
                 return;
             }
 
-            if (paymentStatus !== 'true') {
+            // Check payment status from Supabase Onlinetask Users table
+            const { data: OnlinetaskUsers } = await supabaseClient
+                .from('Onlinetask Users')
+                .select('activated')
+                .eq('id', session.user.id)
+                .single();
+
+            if (!OnlinetaskUsers?.activated) {
                 Swal.fire({
                     icon: 'info',
                     title: 'Payment Required',
                     text: 'Complete payment on your dashboard to unlock tasks.',
-                    confirmButtonText: 'Go to Dashboard',
                     confirmButtonColor: '#10b981'
                 }).then(() => window.location.replace('dashboard.html'));
-                return;
             }
         })();
     </script>
@@ -296,7 +301,7 @@
                 <i data-feather="award" class="text-emerald-600 w-10 h-10"></i>
             </div>
             <h3 class="text-2xl font-bold text-gray-800 mb-2">🎉 Congratulations!</h3>
-            <p class="text-gray-600 mb-6">You've reached 100% completion! Your reward is ready.</p>
+            <p class="text-gray-600 mb-6">You've finished <span id="completedTaskTitle"></span>! Your submissions are being reviewed.</p>
             <div class="bg-emerald-50 border border-emerald-200 rounded-lg p-4 mb-6">
                 <p class="text-emerald-800 font-medium">Reward: <span id="finalReward" class="font-bold">500 pts</span>
                 </p>
@@ -359,7 +364,7 @@
                     id: `task_${i + 1}`,
                     title: TASK_TITLES[i],
                     description: `Help improve our services by completing this quick ${category} task. Your contribution matters!`,
-                    category: category,
+                    category,
                     reward: baseReward,
                     timeEstimate: `${2 + Math.floor(Math.random() * 8)} mins`,
                     instructions: getTaskInstructions(category)
@@ -378,7 +383,7 @@
             return instructions[category] || instructions.micro;
         }
 
-        // ============ STATE MANAGEMENT ============
+        // ============ STATE ============
         let state = {
             user: null,
             allTasks: [],
@@ -391,11 +396,9 @@
         };
 
         // ============ INITIALIZATION ============
-        document.addEventListener('DOMContentLoaded', () => {
+        document.addEventListener('DOMContentLoaded', async () => {
             feather.replace();
-            state.user = JSON.parse(localStorage.getItem('currentUser'));
-            document.getElementById('userEmail').textContent = state.user?.email || 'User';
-            loadUserData();
+            await loadUserData();
             renderTasks();
             renderHistory();
             updateProgressUI();
@@ -407,36 +410,60 @@
             }
         });
 
-        function loadUserData() {
-            const storageKey = `taskData_${state.user.email}`;
-            const saved = localStorage.getItem(storageKey);
+        // ============ LOAD FROM SUPABASE ============
+        async function loadUserData() {
+            const { data: { session } } = await supabaseClient.auth.getSession();
+            if (!session) return;
 
-            if (saved) {
-                const parsed = JSON.parse(saved);
+            state.user = session.user;
+            document.getElementById('userEmail').textContent = state.user.email || 'User';
+
+            const { data: profile, error } = await supabaseClient
+                .from('Onlinetask Users')
+                .select('task_data')
+                .eq('id', state.user.id)
+                .single();
+
+            if (error) console.error('Load error:', error.message);
+
+            if (profile?.task_data) {
+                const d = profile.task_data;
                 Object.assign(state, {
-                    completedTasks: parsed.completedTasks || [],
-                    currentProgress: parsed.currentProgress || 0,
-                    totalPoints: parsed.totalPoints || 0,
-                    hasReached80: parsed.hasReached80 || false,
-                    hasClaimedReward: parsed.hasClaimedReward || false,
-                    userTasks: parsed.userTasks || []
+                    completedTasks: d.completedTasks || [],
+                    currentProgress: d.currentProgress || 0,
+                    totalPoints: d.totalPoints || 0,
+                    hasReached80: d.hasReached80 || false,
+                    hasClaimedReward: d.hasClaimedReward || false,
+                    userTasks: d.userTasks || []
                 });
             } else {
+                // First visit — generate a fresh task set for this user
                 state.allTasks = generateTaskPool();
-                state.userTasks = shuffleArray([...state.allTasks]).slice(0, CONFIG.TASKS_PER_USER);
+                state.userTasks = shuffleArray([...state.allTasks])
+                    .slice(0, CONFIG.TASKS_PER_USER);
             }
         }
 
-        function saveUserData() {
-            const storageKey = `taskData_${state.user.email}`;
-            localStorage.setItem(storageKey, JSON.stringify({
-                completedTasks: state.completedTasks,
-                currentProgress: state.currentProgress,
-                totalPoints: state.totalPoints,
-                hasReached80: state.hasReached80,
-                hasClaimedReward: state.hasClaimedReward,
-                userTasks: state.userTasks
-            }));
+        // ============ SAVE TO SUPABASE ============
+        async function saveUserData() {
+            const { data: { session } } = await supabaseClient.auth.getSession();
+            if (!session) return;
+
+            const { error } = await supabaseClient
+                .from('Onlinetask Users')
+                .update({
+                    task_data: {
+                        completedTasks: state.completedTasks,
+                        currentProgress: state.currentProgress,
+                        totalPoints: state.totalPoints,
+                        hasReached80: state.hasReached80,
+                        hasClaimedReward: state.hasClaimedReward,
+                        userTasks: state.userTasks
+                    }
+                })
+                .eq('id', session.user.id);
+
+            if (error) console.error('Save error:', error.message);
         }
 
         function shuffleArray(array) {
@@ -465,30 +492,30 @@
 
             if (tasksToShow.length === 0) {
                 container.innerHTML = `
-                    <div class="col-span-full text-center py-12">
-                        <i data-feather="check-circle" class="w-16 h-16 text-emerald-300 mx-auto mb-4"></i>
-                        <p class="text-gray-500">No available tasks match your filters.<br>Try changing filters or check back later!</p>
-                    </div>`;
+        <div class="col-span-full text-center py-12">
+          <i data-feather="check-circle" class="w-16 h-16 text-emerald-300 mx-auto mb-4"></i>
+          <p class="text-gray-500">No available tasks match your filters.<br>Try changing filters or check back later!</p>
+        </div>`;
                 feather.replace();
                 return;
             }
 
             container.innerHTML = tasksToShow.map(task => `
-                <div class="task-card bg-white rounded-xl p-5 border border-gray-100 hover:border-emerald-200 cursor-pointer fade-in" 
-                     data-task-id="${task.id}">
-                    <div class="flex items-start justify-between mb-3">
-                        <span class="px-2 py-1 bg-emerald-50 text-emerald-700 text-xs font-medium rounded capitalize">${task.category}</span>
-                        <span class="flex items-center text-emerald-600 font-bold text-sm">
-                            <i data-feather="gift" class="w-3 h-3 mr-1"></i>${task.reward} pts
-                        </span>
-                    </div>
-                    <h4 class="font-semibold text-gray-800 mb-2 line-clamp-2">${task.title}</h4>
-                    <p class="text-gray-600 text-sm mb-3 line-clamp-2">${task.description}</p>
-                    <div class="flex items-center justify-between text-xs text-gray-500">
-                        <span class="flex items-center"><i data-feather="clock" class="w-3 h-3 mr-1"></i>${task.timeEstimate}</span>
-                        <span class="text-emerald-600 font-medium">Start →</span>
-                    </div>
-                </div>`).join('');
+      <div class="task-card bg-white rounded-xl p-5 border border-gray-100 hover:border-emerald-200 cursor-pointer fade-in"
+           data-task-id="${task.id}">
+        <div class="flex items-start justify-between mb-3">
+          <span class="px-2 py-1 bg-emerald-50 text-emerald-700 text-xs font-medium rounded capitalize">${task.category}</span>
+          <span class="flex items-center text-emerald-600 font-bold text-sm">
+            <i data-feather="gift" class="w-3 h-3 mr-1"></i>${task.reward} pts
+          </span>
+        </div>
+        <h4 class="font-semibold text-gray-800 mb-2 line-clamp-2">${task.title}</h4>
+        <p class="text-gray-600 text-sm mb-3 line-clamp-2">${task.description}</p>
+        <div class="flex items-center justify-between text-xs text-gray-500">
+          <span class="flex items-center"><i data-feather="clock" class="w-3 h-3 mr-1"></i>${task.timeEstimate}</span>
+          <span class="text-emerald-600 font-medium">Start →</span>
+        </div>
+      </div>`).join('');
 
             feather.replace();
             document.querySelectorAll('.task-card').forEach(card => {
@@ -512,24 +539,24 @@
             list.innerHTML = sorted.map(item => {
                 const task = state.userTasks.find(t => t.id === item.taskId);
                 const statusConfig = {
-                    'pending': { color: 'bg-blue-100 text-blue-800', icon: 'clock' },
-                    'approved': { color: 'bg-emerald-100 text-emerald-800', icon: 'check-circle' },
-                    'rejected': { color: 'bg-red-100 text-red-800', icon: 'x-circle' }
+                    pending: { color: 'bg-blue-100 text-blue-800', icon: 'clock' },
+                    approved: { color: 'bg-emerald-100 text-emerald-800', icon: 'check-circle' },
+                    rejected: { color: 'bg-red-100 text-red-800', icon: 'x-circle' }
                 }[item.status] || { color: 'bg-gray-100 text-gray-800', icon: 'circle' };
 
                 return `
-                    <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                        <div class="flex-1 min-w-0">
-                            <p class="font-medium text-gray-800 text-sm truncate">${task?.title || 'Unknown Task'}</p>
-                            <p class="text-xs text-gray-500">${new Date(item.submittedAt).toLocaleDateString()}</p>
-                        </div>
-                        <div class="flex items-center space-x-3">
-                            <span class="px-2 py-1 ${statusConfig.color} text-xs font-medium rounded-full flex items-center">
-                                <i data-feather="${statusConfig.icon}" class="w-3 h-3 mr-1"></i>${item.status}
-                            </span>
-                            <span class="text-xs font-bold text-emerald-700">+${item.points}</span>
-                        </div>
-                    </div>`;
+        <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+          <div class="flex-1 min-w-0">
+            <p class="font-medium text-gray-800 text-sm truncate">${task?.title || 'Unknown Task'}</p>
+            <p class="text-xs text-gray-500">${new Date(item.submittedAt).toLocaleDateString()}</p>
+          </div>
+          <div class="flex items-center space-x-3">
+            <span class="px-2 py-1 ${statusConfig.color} text-xs font-medium rounded-full flex items-center">
+              <i data-feather="${statusConfig.icon}" class="w-3 h-3 mr-1"></i>${item.status}
+            </span>
+            <span class="text-xs font-bold text-emerald-700">+${item.points}</span>
+          </div>
+        </div>`;
             }).join('');
             feather.replace();
         }
@@ -554,13 +581,12 @@
                 rejectedNotice.classList.remove('hidden');
                 warning80.classList.add('hidden');
             }
-
             if (state.currentProgress >= 100) {
                 progressCircle.setAttribute('stroke', '#059669');
             }
         }
 
-        // ============ TASK MODAL & SUBMISSION ============
+        // ============ TASK MODAL ============
         function openTaskModal(taskId) {
             const task = state.userTasks.find(t => t.id === taskId);
             if (!task) return;
@@ -575,21 +601,21 @@
             const inputArea = document.getElementById('taskInputArea');
             if (task.category === 'survey') {
                 inputArea.innerHTML = `
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Your Response</label>
-                    <select id="taskResponse" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:outline-none">
-                        <option value="">Select an option...</option>
-                        <option value="excellent">Excellent</option>
-                        <option value="good">Good</option>
-                        <option value="average">Average</option>
-                        <option value="poor">Poor</option>
-                    </select>`;
+        <label class="block text-sm font-medium text-gray-700 mb-2">Your Response</label>
+        <select id="taskResponse" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+          <option value="">Select an option...</option>
+          <option value="excellent">Excellent</option>
+          <option value="good">Good</option>
+          <option value="average">Average</option>
+          <option value="poor">Poor</option>
+        </select>`;
             } else if (task.category === 'review') {
                 inputArea.innerHTML = `
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Rating (1-5)</label>
-                    <div class="flex space-x-2">
-                        ${[1, 2, 3, 4, 5].map(n => `<button type="button" data-rating="${n}" class="rating-btn w-10 h-10 rounded-full border-2 border-gray-300 hover:border-emerald-500 hover:bg-emerald-50 font-bold transition">${n}</button>`).join('')}
-                    </div>
-                    <input type="hidden" id="taskResponse" value="">`;
+        <label class="block text-sm font-medium text-gray-700 mb-2">Rating (1-5)</label>
+        <div class="flex space-x-2">
+          ${[1, 2, 3, 4, 5].map(n => `<button type="button" data-rating="${n}" class="rating-btn w-10 h-10 rounded-full border-2 border-gray-300 hover:border-emerald-500 hover:bg-emerald-50 font-bold transition">${n}</button>`).join('')}
+        </div>
+        <input type="hidden" id="taskResponse" value="">`;
                 setTimeout(() => {
                     document.querySelectorAll('.rating-btn').forEach(btn => {
                         btn.addEventListener('click', function () {
@@ -605,8 +631,8 @@
                 }, 100);
             } else {
                 inputArea.innerHTML = `
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Your Answer</label>
-                    <textarea id="taskResponse" rows="3" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:outline-none" placeholder="Enter your response..."></textarea>`;
+        <label class="block text-sm font-medium text-gray-700 mb-2">Your Answer</label>
+        <textarea id="taskResponse" rows="3" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:outline-none" placeholder="Enter your response..."></textarea>`;
             }
 
             document.getElementById('submitTask').dataset.taskId = taskId;
@@ -623,7 +649,8 @@
             if (responseEl) responseEl.value = '';
         }
 
-        function submitTask() {
+        // ============ TASK SUBMISSION ============
+        async function submitTask() {
             const taskId = document.getElementById('submitTask').dataset.taskId;
             const responseEl = document.getElementById('taskResponse');
             const response = responseEl?.value?.trim();
@@ -636,51 +663,63 @@
             const task = state.userTasks.find(t => t.id === taskId);
             if (!task) return;
 
-            const status = state.hasReached80 ? 'pending' : 'approved';
+            const status = state.hasReached80 ? 'pending' : 'Submitted';
 
             state.completedTasks.push({
-                taskId, submittedAt: new Date().toISOString(), status, points: task.reward, response
+                taskId,
+                submittedAt: new Date().toISOString(),
+                status,
+                points: task.reward,
+                response
             });
 
-            const tasksNeeded = state.userTasks.length;
             const completedCount = state.completedTasks.length;
+            const tasksNeeded = state.userTasks.length;
             state.currentProgress = Math.min(100, (completedCount / tasksNeeded) * 100);
             state.totalPoints += task.reward;
 
             checkProgressThreshold();
-            saveUserData();
+            await saveUserData();       // ← awaited so data is safely written
             renderTasks();
             renderHistory();
             updateProgressUI();
 
             Swal.fire({
-                icon: 'success', title: 'Submitted!', text: `+${task.reward} points earned. Status: ${status.toUpperCase()}`,
-                timer: 2000, showConfirmButton: false, background: '#ecfdf5'
+                icon: 'success',
+                title: 'Submitted!',
+                text: `+${task.reward} points earned. Status: ${status.toUpperCase()}`,
+                timer: 2000,
+                showConfirmButton: false,
+                background: '#ecfdf5'
             }).then(() => {
                 closeTaskModal();
-                if (state.currentProgress >= 100 && !state.hasClaimedReward) setTimeout(showRewardModal, 500);
+                if (state.currentProgress >= 100 && !state.hasClaimedReward) {
+                    setTimeout(showRewardModal, 500);
+                }
             });
         }
 
-        function checkProgressThreshold() {
+        async function checkProgressThreshold() {
             if (state.currentProgress >= CONFIG.PROGRESS_THRESHOLD && !state.hasReached80) {
                 state.hasReached80 = true;
                 state.completedTasks = state.completedTasks.map(task =>
-                    task.status === 'approved' ? { ...task, status: 'rejected' } : task
+                    task.status === 'submitted' ? { ...task, status: 'rejected' } : task
                 );
 
                 Swal.fire({
-                    icon: 'info', title: 'System Review Activated',
+                    icon: 'info',
+                    title: 'System Review Activated',
                     html: `You've reached <strong>80% completion</strong>!<br><br>All previous submissions are now under review and may be rejected.<br>Continue with remaining tasks to reach 100%.`,
                     confirmButtonColor: '#10b981'
                 });
 
-                saveUserData();
+                await saveUserData();
                 renderHistory();
                 updateProgressUI();
             }
         }
 
+        // ============ REWARD MODAL ============
         function showRewardModal() {
             document.getElementById('finalReward').textContent = `${CONFIG.REWARD_AT_100} pts`;
             document.getElementById('rewardModal').classList.remove('hidden');
@@ -694,16 +733,18 @@
             document.body.style.overflow = '';
         }
 
-        function claimReward() {
+        async function claimReward() {
             state.hasClaimedReward = true;
             state.totalPoints += CONFIG.REWARD_AT_100;
-            saveUserData();
+            await saveUserData();
             closeRewardModal();
 
             Swal.fire({
-                icon: 'success', title: '🎉 Reward Claimed!',
+                icon: 'success',
+                title: '🎉 Reward Claimed!',
                 html: `Congratulations!<br><br><strong>+${CONFIG.REWARD_AT_100} bonus points</strong> added to your account.<br>Rewards are processed within 24 hours.`,
-                confirmButtonText: 'Awesome!', confirmButtonColor: '#10b981'
+                confirmButtonText: 'Awesome!',
+                confirmButtonColor: '#10b981'
             }).then(() => {
                 updateProgressUI();
                 document.getElementById('pointsDisplay').textContent = `${state.totalPoints} pts`;
@@ -732,20 +773,29 @@
             document.getElementById('closeModal').addEventListener('click', closeTaskModal);
             document.getElementById('cancelTask').addEventListener('click', closeTaskModal);
             document.getElementById('submitTask').addEventListener('click', submitTask);
-            document.getElementById('taskModal').addEventListener('click', e => { if (e.target === this) closeTaskModal(); });
+            document.getElementById('taskModal').addEventListener('click', function (e) {
+                if (e.target === this) closeTaskModal();
+            });
 
             document.getElementById('closeRewardModal').addEventListener('click', closeRewardModal);
             document.getElementById('claimReward').addEventListener('click', claimReward);
-            document.getElementById('rewardModal').addEventListener('click', e => { if (e.target === this) closeRewardModal(); });
+            document.getElementById('rewardModal').addEventListener('click', function (e) {
+                if (e.target === this) closeRewardModal();
+            });
 
             document.getElementById('logoutBtn').addEventListener('click', function () {
                 Swal.fire({
-                    title: 'Logout?', text: 'You will need to log in again to access tasks.',
-                    icon: 'question', showCancelButton: true, confirmButtonText: 'Yes, logout',
-                    cancelButtonText: 'Cancel', confirmButtonColor: '#ef4444', cancelButtonColor: '#6b7280'
-                }).then((result) => {
+                    title: 'Logout?',
+                    text: 'You will need to log in again to access tasks.',
+                    icon: 'question',
+                    showCancelButton: true,
+                    confirmButtonText: 'Yes, logout',
+                    cancelButtonText: 'Cancel',
+                    confirmButtonColor: '#ef4444',
+                    cancelButtonColor: '#6b7280'
+                }).then(async (result) => {
                     if (result.isConfirmed) {
-                        localStorage.removeItem('currentUser');
+                        await supabaseClient.auth.signOut();
                         window.location.replace('login.html');
                     }
                 });

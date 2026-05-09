@@ -1035,21 +1035,27 @@
     /* ═══════════════════════════════════════════════════════════
        AUTH GUARD — uses Supabase session, NOT localStorage
     ═══════════════════════════════════════════════════════════ */
-    (async function authGuard() {
+    async function openModal() {
+      // Check if user already paid
       const { data: { session } } = await supabaseClient.auth.getSession();
 
-      // Hide loader regardless
-      document.getElementById('page-loader').classList.add('hidden');
+      if (session) {
+        const { data: profile } = await supabaseClient
+          .from('Onlinetask Users')
+          .select('activated')
+          .eq('id', session.user.id)
+          .single();
 
-      if (!session) {
-        // Not logged in — redirect to login
-        window.location.href = 'login.html';
-        return;
+        if (profile?.activated) {
+          // Already paid — go straight to tasks
+          window.location.href = 'finalpage.html';
+          return;
+        }
       }
 
-      // Session is valid — boot the page
-      initPage(session.user);
-    })();
+      // Not yet paid — show payment modal
+      document.getElementById('modal-overlay').classList.add('open');
+    }
 
     /* ═══════════════════════════════════════════════════════════
        BOOT — called only after session is confirmed
