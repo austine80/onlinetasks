@@ -8,9 +8,8 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
   <script src="https://cdn.jsdelivr.net/npm/feather-icons@4.29.0/dist/feather.min.js"></script>
-
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
+  <script src="supabaseClient.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
     crossorigin="anonymous" />
   <link
@@ -53,7 +52,7 @@
       font-family: 'Sora', sans-serif;
     }
 
-    /* ── Page loader ── */
+    /* Page loader */
     #page-loader {
       position: fixed;
       inset: 0;
@@ -85,7 +84,7 @@
       }
     }
 
-    /* ── Floating Particles ── */
+    /* Particles */
     #particles-bg {
       position: fixed;
       inset: 0;
@@ -126,7 +125,7 @@
       }
     }
 
-    /* ── Navbar ── */
+    /* Navbar */
     #navbar {
       position: sticky;
       top: 0;
@@ -147,7 +146,7 @@
       font-weight: 700;
       font-size: 1.25rem;
       color: var(--emerald);
-      letter-spacing: -0.5px;
+      letter-spacing: -.5px;
     }
 
     .nav-greeting {
@@ -187,7 +186,7 @@
       background: #a7f3d0;
     }
 
-    /* ── Carousel ── */
+    /* Carousel */
     .carousel-wrapper {
       position: relative;
       width: 100%;
@@ -309,7 +308,7 @@
       }
     }
 
-    /* ── Greeting Banner ── */
+    /* Greeting banner */
     #greeting-banner {
       position: relative;
       z-index: 1;
@@ -330,7 +329,7 @@
       opacity: .85;
     }
 
-    /* ── Stats ── */
+    /* Stats */
     #stats-section {
       position: relative;
       z-index: 1;
@@ -387,7 +386,7 @@
       color: var(--gold);
     }
 
-    /* ── Skills ── */
+    /* Skills */
     #skills-section {
       position: relative;
       z-index: 1;
@@ -474,7 +473,7 @@
       transform: scale(1.02);
     }
 
-    /* ── Activity Feed ── */
+    /* Activity feed */
     #feed-section {
       position: relative;
       z-index: 1;
@@ -590,7 +589,7 @@
       white-space: nowrap;
     }
 
-    /* ── Testimonials ── */
+    /* Testimonials */
     #testimonials-section {
       position: relative;
       z-index: 1;
@@ -652,7 +651,7 @@
       margin-top: .75rem;
     }
 
-    /* ── Modal ── */
+    /* Modal */
     #modal-overlay {
       position: fixed;
       inset: 0;
@@ -757,7 +756,7 @@
       background: var(--emerald-dark);
     }
 
-    /* ── Footer ── */
+    /* Footer */
     #footer {
       position: relative;
       z-index: 1;
@@ -773,7 +772,7 @@
 
 <body>
 
-  <!-- PAGE LOADER (shown while Supabase checks session) -->
+  <!-- PAGE LOADER -->
   <div id="page-loader">
     <div class="loader-ring"></div>
   </div>
@@ -847,7 +846,7 @@
     </div>
   </section>
 
-  <!-- PERSONALIZED GREETING BANNER -->
+  <!-- GREETING BANNER -->
   <div id="greeting-banner">
     <h1 id="greeting-text">Welcome back! 👋</h1>
     <p>Your dashboard is live — tasks and earnings await you today.</p>
@@ -909,47 +908,42 @@
         <div class="skill-icon-wrap" style="background:#eef2ff;"><i data-feather="bar-chart-2"
             style="color:#6366f1;width:26px;height:26px;"></i></div>
         <h3>Online Surveys & Market Research</h3>
-        <p>Get paid to share your opinions on products, brands, or services. Companies use your feedback to improve
-          their offerings.</p>
+        <p>Get paid to share your opinions on products, brands, or services.</p>
         <button class="btn-open" onclick="openModal()">Open Tasks</button>
       </div>
       <div class="skill-card" data-aos="fade-up" data-aos-delay="150">
         <div class="skill-icon-wrap" style="background:#fdf2f8;"><i data-feather="edit-3"
             style="color:#ec4899;width:26px;height:26px;"></i></div>
         <h3>Freelance Writing & Copywriting</h3>
-        <p>Create blog posts, articles, website content, or marketing copy for selected clients, companies and
-          organizations.</p>
+        <p>Create blog posts, articles, website content, or marketing copy for clients.</p>
         <button class="btn-open" onclick="openModal()">Open Tasks</button>
       </div>
       <div class="skill-card" data-aos="fade-up" data-aos-delay="200">
         <div class="skill-icon-wrap" style="background:#eff6ff;"><i data-feather="pen-tool"
             style="color:#3b82f6;width:26px;height:26px;"></i></div>
         <h3>Graphic Design</h3>
-        <p>Create logos, posters, social media graphics, and branding materials for individuals and businesses.</p>
+        <p>Create logos, posters, social media graphics, and branding materials.</p>
         <button class="btn-open" onclick="openModal()">Open Tasks</button>
       </div>
       <div class="skill-card" data-aos="fade-up" data-aos-delay="100">
         <div class="skill-icon-wrap" style="background:#f0fdf4;"><i data-feather="headphones"
             style="color:#22c55e;width:26px;height:26px;"></i></div>
         <h3>Transcription</h3>
-        <p>Listen to audio or video recordings and convert them into written text. Ideal if you have good listening and
-          typing skills.</p>
+        <p>Listen to audio or video recordings and convert them into written text.</p>
         <button class="btn-open" onclick="openModal()">Open Tasks</button>
       </div>
       <div class="skill-card" data-aos="fade-up" data-aos-delay="150">
         <div class="skill-icon-wrap" style="background:#faf5ff;"><i data-feather="database"
             style="color:#a855f7;width:26px;height:26px;"></i></div>
         <h3>Data Entry & Microtasks</h3>
-        <p>Complete small digital tasks like labeling images, sorting data, or categorizing content for AI training or
-          research.</p>
+        <p>Complete small digital tasks like labeling images or sorting data.</p>
         <button class="btn-open" onclick="openModal()">Open Tasks</button>
       </div>
       <div class="skill-card" data-aos="fade-up" data-aos-delay="200">
         <div class="skill-icon-wrap" style="background:#fffbeb;"><i data-feather="share-2"
             style="color:#f59e0b;width:26px;height:26px;"></i></div>
         <h3>Social Media Management</h3>
-        <p>Manage and grow social media accounts for businesses, influencers, or brands by creating content and engaging
-          with followers.</p>
+        <p>Manage and grow social media accounts for businesses and brands.</p>
         <button class="btn-open" onclick="openModal()">Open Tasks</button>
       </div>
     </div>
@@ -1026,88 +1020,114 @@
 
   <footer id="footer">© 2025 TaskFlow — Online Tasks & Surveys. All Rights Reserved.</footer>
 
-  <!-- SCRIPTS -->
   <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-  <!-- Your Supabase client (exposes `supabase` globally) -->
-  <script src="supabaseClient.js"></script>
 
   <script>
-    /* ═══════════════════════════════════════════════════════════
-       AUTH GUARD — uses Supabase session, NOT localStorage
-    ═══════════════════════════════════════════════════════════ */
-    async function openModal() {
-      // Check if user already paid
-      const { data: { session } } = await supabaseClient.auth.getSession();
+    /* ═══════════════════════════════════════════════
+       AUTH GUARD
+    ═══════════════════════════════════════════════ */
+    (async function authGuard() {
+      // Wait for DOM first
+      await new Promise(resolve => {
+        if (document.readyState !== 'loading') resolve();
+        else document.addEventListener('DOMContentLoaded', resolve);
+      });
 
-      if (session) {
-        const { data: profile } = await supabaseClient
-          .from('Onlinetask Users')
-          .select('activated')
-          .eq('id', session.user.id)
-          .single();
+      try {
+        const { data: { session }, error } = await supabaseClient.auth.getSession();
 
-        if (profile?.activated) {
-          // Already paid — go straight to tasks
-          window.location.href = 'finalpage.html';
+        if (error) throw error;
+
+        if (!session) {
+          window.location.href = 'login.html';
           return;
         }
+
+        // Session valid — hide loader and boot page
+        document.getElementById('page-loader').classList.add('hidden');
+        initPage(session.user);
+
+      } catch (err) {
+        console.error('Auth error:', err);
+        document.getElementById('page-loader').classList.add('hidden');
+        window.location.href = 'login.html';
       }
+    })();
 
-      // Not yet paid — show payment modal
-      document.getElementById('modal-overlay').classList.add('open');
-    }
-
-    /* ═══════════════════════════════════════════════════════════
-       BOOT — called only after session is confirmed
-    ═══════════════════════════════════════════════════════════ */
+    /* ═══════════════════════════════════════════════
+       INIT PAGE
+    ═══════════════════════════════════════════════ */
     function initPage(user) {
-      document.addEventListener('DOMContentLoaded', () => {
-        AOS.init({ duration: 800, once: true, offset: 60 });
-        feather.replace();
-      });
-
-      // Run on DOMContentLoaded or immediately if already loaded
-      const ready = (fn) => document.readyState !== 'loading' ? fn() : document.addEventListener('DOMContentLoaded', fn);
-
-      ready(() => {
-        AOS.init({ duration: 800, once: true, offset: 60 });
-        feather.replace();
-
-        initGreeting(user);
-        initParticles();
-        initCarousel();
-        initCounters();
-        initCountdown();
-        initActivityFeed();
-        initSound();
-        initLogout();
-      });
+      AOS.init({ duration: 800, once: true, offset: 60 });
+      feather.replace();
+      initGreeting(user);
+      initParticles();
+      initCarousel();
+      initCounters();
+      initCountdown();
+      initActivityFeed();
+      initSound();
+      initLogout();
     }
 
-    /* ═══════════════════════════════════════════════════════════
-       GREETING — reads from Supabase user metadata
-    ═══════════════════════════════════════════════════════════ */
+    /* ═══════════════════════════════════════════════
+       GREETING
+    ═══════════════════════════════════════════════ */
     function initGreeting(user) {
-      // full_name stored in user_metadata during signUp options.data
       const meta = user?.user_metadata || {};
       const rawName = meta.full_name || meta.name || user?.email || null;
-      const name = rawName ? rawName.split(' ')[0] : null; // first name only
-
+      const name = rawName ? rawName.split(' ')[0] : null;
       const hour = new Date().getHours();
       const greet = hour < 12 ? 'Good morning' : hour < 17 ? 'Good afternoon' : 'Good evening';
 
       document.getElementById('greeting-text').textContent = name
-        ? `${greet}, ${name}! 👋`
-        : `${greet}! 👋`;
-
+        ? `${greet}, ${name}! 👋` : `${greet}! 👋`;
       document.getElementById('nav-greeting').innerHTML = name
-        ? `Welcome, <span>${name}</span>`
-        : `Welcome back 👋`;
+        ? `Welcome, <span>${name}</span>` : `Welcome back 👋`;
     }
 
-    /* ═══════════════════════════════════════════════════════════
+    /* ═══════════════════════════════════════════════
+       OPEN MODAL — checks if already paid
+    ═══════════════════════════════════════════════ */
+    async function openModal() {
+      try {
+        const { data: { session } } = await supabaseClient.auth.getSession();
+
+        if (session) {
+          const { data: profile } = await supabaseClient
+            .from('Onlinetask Users')
+            .select('activated')
+            .eq('id', session.user.id)
+            .single();
+
+          if (profile?.activated) {
+            // Already paid — go straight to tasks
+            window.location.href = 'finalpage.html';
+            return;
+          }
+        }
+      } catch (err) {
+        console.error('Check activated error:', err);
+      }
+
+      // Not paid yet — show modal
+      document.getElementById('modal-overlay').classList.add('open');
+    }
+
+    /* ═══════════════════════════════════════════════
+       CLOSE MODAL
+    ═══════════════════════════════════════════════ */
+    function closeModal() {
+      document.getElementById('modal-overlay').classList.remove('open');
+    }
+
+    document.getElementById('modal-overlay').addEventListener('click', (e) => {
+      if (e.target === document.getElementById('modal-overlay')) closeModal();
+    });
+
+    /* ═══════════════════════════════════════════════
        LOGOUT
-    ═══════════════════════════════════════════════════════════ */
+    ═══════════════════════════════════════════════ */
     function initLogout() {
       document.getElementById('logout-btn').addEventListener('click', async () => {
         await supabaseClient.auth.signOut();
@@ -1115,9 +1135,9 @@
       });
     }
 
-    /* ═══════════════════════════════════════════════════════════
-       FLOATING PARTICLES
-    ═══════════════════════════════════════════════════════════ */
+    /* ═══════════════════════════════════════════════
+       PARTICLES
+    ═══════════════════════════════════════════════ */
     function initParticles() {
       const container = document.getElementById('particles-bg');
       const icons = ['✓', '$', '✉', '📊', '🖊', '💼', '📋', '⚡', '💡', '🔗'];
@@ -1139,9 +1159,9 @@
       }
     }
 
-    /* ═══════════════════════════════════════════════════════════
+    /* ═══════════════════════════════════════════════
        CAROUSEL
-    ═══════════════════════════════════════════════════════════ */
+    ═══════════════════════════════════════════════ */
     function initCarousel() {
       const slides = document.querySelectorAll('.carousel-slide');
       const dotsContainer = document.getElementById('carousel-dots');
@@ -1168,16 +1188,14 @@
 
       document.getElementById('carousel-prev').addEventListener('click', () => { stopTimer(); goTo(current - 1); startTimer(); });
       document.getElementById('carousel-next').addEventListener('click', () => { stopTimer(); goTo(current + 1); startTimer(); });
-
-      const wrapper = document.getElementById('carousel');
-      wrapper.addEventListener('mouseenter', stopTimer);
-      wrapper.addEventListener('mouseleave', startTimer);
+      document.getElementById('carousel').addEventListener('mouseenter', stopTimer);
+      document.getElementById('carousel').addEventListener('mouseleave', startTimer);
       startTimer();
     }
 
-    /* ═══════════════════════════════════════════════════════════
-       ANIMATED COUNTERS
-    ═══════════════════════════════════════════════════════════ */
+    /* ═══════════════════════════════════════════════
+       COUNTERS
+    ═══════════════════════════════════════════════ */
     function initCounters() {
       function animateTo(el, target, duration) {
         const start = performance.now();
@@ -1206,13 +1224,14 @@
       }, 3500);
     }
 
-    /* ═══════════════════════════════════════════════════════════
-       COUNTDOWN TIMER
-    ═══════════════════════════════════════════════════════════ */
+    /* ═══════════════════════════════════════════════
+       COUNTDOWN
+    ═══════════════════════════════════════════════ */
     function initCountdown() {
       function update() {
         const now = new Date();
-        const midnight = new Date(); midnight.setHours(24, 0, 0, 0);
+        const midnight = new Date();
+        midnight.setHours(24, 0, 0, 0);
         let diff = Math.floor((midnight - now) / 1000);
         const h = String(Math.floor(diff / 3600)).padStart(2, '0'); diff %= 3600;
         const m = String(Math.floor(diff / 60)).padStart(2, '0');
@@ -1223,9 +1242,9 @@
       setInterval(update, 1000);
     }
 
-    /* ═══════════════════════════════════════════════════════════
-       LIVE ACTIVITY FEED
-    ═══════════════════════════════════════════════════════════ */
+    /* ═══════════════════════════════════════════════
+       ACTIVITY FEED
+    ═══════════════════════════════════════════════ */
     function initActivityFeed() {
       const firstNames = ['James', 'Amina', 'Kevin', 'Fatuma', 'Brian', 'Aisha', 'Daniel', 'Grace', 'Mike', 'Siti', 'Tom', 'Mercy', 'John', 'Wanjiku', 'Alex', 'David', 'Mary', 'Samuel', 'Esther', 'Peter', 'Janet', 'Joseph', 'Cynthia', 'Paul', 'Diana', 'George', 'Linda', 'Stephen', 'Lucy', 'Collins'];
       const lasts = ['K.', 'M.', 'O.', 'W.', 'N.', 'A.', 'Otieno', 'Mwangi', 'Omondi', 'Wambui', 'Njoroge', 'Abdi', 'Juma', 'Chebet', 'Mutiso', 'Ochieng', 'Wairimu', 'Ngugi', 'Ali', 'Kariuki', 'Mugo', 'Onyango', 'Wekesa', 'Koech', 'Muli', 'Kiprotich', 'Mbugua'];
@@ -1245,9 +1264,8 @@
       function addEntry() {
         const fn = firstNames[Math.floor(Math.random() * firstNames.length)];
         const ln = lasts[Math.floor(Math.random() * lasts.length)];
-        const name = `${fn} ${ln}`;
         const color = colors[Math.floor(Math.random() * colors.length)];
-        const action = events[Math.floor(Math.random() * events.length)](name);
+        const action = events[Math.floor(Math.random() * events.length)](`${fn} ${ln}`);
         const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
         const item = document.createElement('div');
@@ -1268,9 +1286,9 @@
       })();
     }
 
-    /* ═══════════════════════════════════════════════════════════
+    /* ═══════════════════════════════════════════════
        SOUND
-    ═══════════════════════════════════════════════════════════ */
+    ═══════════════════════════════════════════════ */
     let soundEnabled = true, audioCtx = null;
 
     function getAudioCtx() {
@@ -1301,19 +1319,9 @@
       });
     }
 
-    /* ═══════════════════════════════════════════════════════════
-       MODAL
-    ═══════════════════════════════════════════════════════════ */
-    function openModal() { document.getElementById('modal-overlay').classList.add('open'); }
-    function closeModal() { document.getElementById('modal-overlay').classList.remove('open'); }
-
-    document.getElementById('modal-overlay').addEventListener('click', (e) => {
-      if (e.target === document.getElementById('modal-overlay')) closeModal();
-    });
-
-    /* ═══════════════════════════════════════════════════════════
-       PAYMENT FORM (STK Push)
-    ═══════════════════════════════════════════════════════════ */
+    /* ═══════════════════════════════════════════════
+       PAYMENT FORM — STK Push
+    ═══════════════════════════════════════════════ */
     document.getElementById('payForm').addEventListener('submit', async (e) => {
       e.preventDefault();
       const phone = document.getElementById('mpesa-phone').value.trim();
@@ -1331,16 +1339,32 @@
         catch { alert('Server error: invalid response.'); return; }
 
         if (data.error) { alert('Error: ' + data.error); return; }
+
         if (data.ResponseCode === '0') {
           alert('✅ STK Push sent! Check your phone.');
+
           const poll = setInterval(async () => {
             try {
               const r = await fetch(`https://solutionsbackend-uv0s.onrender.com/check-payment.php?phone=${encodeURIComponent(phone)}`);
               const result = await r.json();
-              if (result.status === 'completed') { clearInterval(poll); window.location.href = 'next-form.html'; }
-              else if (result.status === 'not_found') { clearInterval(poll); alert('Transaction expired. Please try again.'); }
-            } catch { }
+
+              if (result.status === 'completed') {
+                clearInterval(poll);
+                // Confirm session still alive before redirect
+                const { data: { session } } = await supabaseClient.auth.getSession();
+                if (session) {
+                  window.location.href = 'next-form.html';
+                } else {
+                  const { data: refreshed } = await supabaseClient.auth.refreshSession();
+                  window.location.href = refreshed.session ? 'next-form.html' : 'login.html';
+                }
+              } else if (result.status === 'not_found') {
+                clearInterval(poll);
+                alert('Transaction expired. Please try again.');
+              }
+            } catch (err) { console.error('Poll error:', err); }
           }, 3000);
+
         } else {
           alert('M-PESA Error: ' + (data.errorMessage || data.errorCode || 'Please try again.'));
         }
